@@ -1,0 +1,14 @@
+  <application>
+    <name>external-application-1</name>
+    <applicationRoot>.</applicationRoot>
+    <projects>
+      <project>
+        <name>ounce-application-c</name>
+        <path>c</path>
+      </project>
+      <project>
+        <name>ounce-test-d</name>
+        <path>d</path>
+      </project>
+    </projects>
+  </application>

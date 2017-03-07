@@ -1,0 +1,81 @@
+  ------
+  Usage
+  ------
+  Brian Fox
+  ------
+  Oct 2007
+  ------
+
+Usage
+ 
+  Brief examples on how to use the goals.
+ 
+* Generic Plugin configuration information
+
+  See the following links for information about including and configuring plugins in your project:
+  
+  *{{{http://maven.apache.org/guides/mini/guide-configuring-plugins.html}Configuring Plugins}}
+  
+  *{{{http://maven.apache.org/guides/plugin/guide-java-plugin-development.html}Plugin Development}}
+
+  *{{{http://maven.apache.org/guides/introduction/introduction-to-plugin-prefix-mapping.html}Plugin Prefix}}
+
+* The <<<ounce:project>>> mojo
+
+   
+     []
+
+   Configure the plugin something like this if you intend to bind it to execute along with your build:
+
++---+
+<project>
+  [...]
+  <build>
+   <plugins>
+     <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>ounce-maven-plugin</artifactId>        <executions>
+          <execution>
+            <id>copy</id>
+            <phase>package</phase>
+            <goals>
+              <goal>project</goal>
+            </goals>
+            <configuration>
+              
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+  [...]
+</project>
++---+
+  
+	If you intend to configure this mojo for execution on the command line using:
+
++---+
+mvn ounce:project
++---+
+
+	you must not put the configuration inside the <executions> tag. Your configuration should look like this:
+		
++---+
+<project>
+  [...]
+  <build>
+   <plugins>
+     <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>ounce-maven-plugin</artifactId>
+        <configuration>
+          
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  [...]
+</project>
++---+	
+

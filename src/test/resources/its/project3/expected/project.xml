@@ -1,0 +1,12 @@
+<object-stream>
+  <project>
+    <name>ounce-project-3</name>
+    <projectRoot>.</projectRoot>
+    <sourceRoots>
+      <string>src/main/java</string>
+    </sourceRoots>
+    <webRoot>target/ounce-project-3-1</webRoot>
+    <classPath>%M2_REPO%/junit/junit/4.4/junit-4.4.jar;%M2_REPO%/org/apache/maven/maven-artifact/2.0.6/maven-artifact-2.0.6.jar;%M2_REPO%/org/codehaus/plexus/plexus-utils/1.4.1/plexus-utils-1.4.1.jar;target/classes;target/test-classes</classPath>
+    <packaging>jar</packaging>
+  </project>
+</object-stream>

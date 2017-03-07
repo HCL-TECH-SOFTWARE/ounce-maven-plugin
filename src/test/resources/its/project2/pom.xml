@@ -1,0 +1,35 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <!--setting all variables to ensure they are carried through. Also checking that setting includeTestSources
+  automatically elevates the classpathScope to test-->
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>test</groupId>
+    <artifactId>ounce-maven-plugin-it-parent</artifactId>
+	<version>1</version>
+  </parent>
+  
+  <artifactId>ounce-project-2</artifactId>
+  <packaging>war</packaging>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-artifact</artifactId>
+      <version>2.0.6</version>
+    </dependency>
+  </dependencies>
+	<build>
+      <plugins>
+      <plugin>
+	    <groupId>org.codehaus.mojo</groupId>
+		<artifactId>ounce-maven-plugin</artifactId>
+			  <configuration>
+				 <jdkName>myJDK</jdkName>
+				 <includeTestSources>true</includeTestSources>
+				 <webappDirectory>${project.build.directory}/mywebapp-location</webappDirectory>
+				 <javaCompilerOptions>debug=true,verbose=true</javaCompilerOptions>
+			  </configuration>
+      </plugin>
+    </plugins>
+	</build>
+</project>

@@ -1,0 +1,168 @@
+  ------
+  Application Mojo Usage
+  ------
+  Brian Fox
+  ------
+  Nov 2007
+  ------
+
+Application Mojo Usage
+ 
+  Brief examples on how to use the application goal.
+ 
+* Generic Plugin configuration information
+
+  See the following links for information about including and configuring plugins in your project:
+  
+  *{{{http://maven.apache.org/guides/mini/guide-configuring-plugins.html}Configuring Plugins}}
+  
+  *{{{http://maven.apache.org/guides/plugin/guide-java-plugin-development.html}Plugin Development}}
+
+  *{{{http://maven.apache.org/guides/introduction/introduction-to-plugin-prefix-mapping.html}Plugin Prefix}}
+
+* The <<<ounce:application>>> mojo
+  
+    If you want to generate the Ounce application on demand via the command line like:
+	
++---+
+mvn ounce:application
++---+
+
+	you must not put the configuration inside the <executions> tag. Your configuration should look like this:
+		
++---+
+<project>
+  [...]
+  <build>
+   <plugins>
+     <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>ounce-maven-plugin</artifactId>
+        <configuration>
+          
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  [...]
+</project>
++---+	
+
+	The <<<application>>> mojo can also be used to bind the plugin so it executes along with your build. Configure it using an execution as shown below. Once
+	bound, the mojo will automatically execute as part of the <<<package>>> phase.
+
++---+
+<project>
+  [...]
+  <build>
+   <plugins>
+     <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>ounce-maven-plugin</artifactId>
+        <inherited>false<inherited>
+        <executions>
+          <execution>
+            <id>create ounce project</id>
+            <goals>
+              <goal>application</goal>
+            </goals>
+	  <!-- don't inherit the application to all children. Typically the application will be created at a parent level-->
+	  <configuration>
+              <!--insert mojo configuration here-->
+              </excludes>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+  [...]
+</project>
++---+
+ 
+   The application mojo will automatically include all non-pom modules in its child tree. This list can be tweaked using the include and exclude filters to
+   filter out the paths of children. 
+   
+* Filtering Modules
+ 
+   By default, all child modules will be included as projects in the application. This list can be modified using the includes and excludes parameters. 
+   
+   This uses a normal path filter syntax:
+   
+   \** means any number folder or file (**/** is the default and includes everything)
+   
+   ? means any single character.
+   
+   Examples:
+   
++---+
+  <configuration>
+    <includes>
+      <include>**/pathOfModulesToInclude/**</include>
+    </includes>
+    <excludes>
+      <exclude>**/path/Of/ModulesToExclude/**</exclude>
+      <!--exclude anything beginning with project followed by one character-->
+      <exclude>**/project?/**</exclude>
+    </excludes>
+  </configuration>   
++---+ 
+   
+* Including External Projects
+   
+   External projects can also be declared by name and path. For example, if you have another project that contains code you want to include in the
+   scan, you may configure the plugin as shown:
+    
++---+
+<project>
+  [...]
+  <build>
+   <plugins>
+     <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>ounce-maven-plugin</artifactId>
+        <inherited>false<inherited>
+        <executions>
+          <execution>
+            <id>create ounce project</id>
+            <goals>
+              <goal>application</goal>
+            </goals>
+	   <!-- don't inherit the application to all children. Typically the application will be created at a parent level-->
+            <configuration>
+              <externalProjects>
+                <externalProject>myproject1,../pathToProject</externalProject>
+                <externalProject>myproject2,${someMavenProperty}/pathToProject</externalProject>
+              </externalProjects>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+  [...]
+</project>
++---+    
+   
+* External Applications
+
+   External Application files can also be used to pull in external projects. For each application file, 
+   you may specify include and exclude filters that behave the same as the ones used to filter the child modules.
+   
+   The syntax is: path,[includes|includes|..],[excludes|excludes|..]
+   
+   Examples:
+   
++---+
+  <configuration>
+    <externalApplications>
+      <externalApplication>path/to/application/file</externalApplication>
+      <externalApplication>path/to/application/file2,**/modsToInclude/**|**/someMoreThingsToInclude/**</externalApplication>
+      <externalApplication>path/to/application/file2,**/**,**/modesToExclude/**</externalApplication>
+    </externalApplications>
+  </configuration>   
++---+ 
+ 
+   
+    
+ 

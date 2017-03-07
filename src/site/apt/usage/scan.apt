@@ -1,0 +1,55 @@
+  ------
+  Scan Mojo Usage
+  ------
+  Brian Fox
+  ------
+  Nov 2007
+  ------
+
+Scan Mojo Usage
+ 
+  Brief examples on how to use the Scan goal.
+ 
+* Generic Plugin configuration information
+
+  See the following links for information about including and configuring plugins in your project:
+  
+  *{{{http://maven.apache.org/guides/mini/guide-configuring-plugins.html}Configuring Plugins}}
+  
+  *{{{http://maven.apache.org/guides/plugin/guide-java-plugin-development.html}Plugin Development}}
+
+  *{{{http://maven.apache.org/guides/introduction/introduction-to-plugin-prefix-mapping.html}Plugin Prefix}}
+ 
+* The <<<ounce:scan>>> mojo
+  
+    You can Scan your project on demand via the command line like:
+	
++---+
+mvn ounce:scan
++---+
+
+	you must not put the configuration inside the <executions> tag. Your configuration should look like this:
+		
++---+
+<project>
+  [...]
+  <build>
+   <plugins>
+     <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>ounce-maven-plugin</artifactId>
+        <configuration>
+          
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  [...]
+</project>
++---+	
+
+  
+  The <<<scan>>> mojo mojo will fork the build and update all the application and project files. Therefore, you should
+  not bind scan to a lifecycle in your pom for multi module builds.
+
+ 

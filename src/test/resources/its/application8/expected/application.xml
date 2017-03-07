@@ -1,0 +1,24 @@
+<object-stream>
+  <application>
+    <name>ounce-application-8</name>
+    <applicationRoot>.</applicationRoot>
+    <projects>
+      <project>
+        <name>ounce-application-a</name>
+        <path>a</path>
+      </project>
+      <project>
+        <name>ounce-application-c</name>
+        <path>%extApp%/1/c</path>
+      </project>
+      <project>
+        <name>ounce-test-b</name>
+        <path>b</path>
+      </project>
+      <project>
+        <name>ounce-test-d</name>
+        <path>%extApp%/1/d</path>
+      </project>
+    </projects>
+  </application>
+</object-stream>

@@ -1,0 +1,10 @@
+<object-stream>
+  <scan>
+    <applicationFile>${basedir}/ounce-site-1.paf</applicationFile>
+    <assessmentName>Unnamed - test:ounce-site-1:jar:1-1</assessmentName>
+    <reportType>Findings</reportType>
+    <reportOutputType>html</reportOutputType>
+    <reportOutputLocation>${basedir}/target/site/Ounce-Analysis/index.html</reportOutputLocation>
+    <publish>false</publish>
+  </scan>
+</object-stream>

@@ -1,0 +1,22 @@
+<lifecycles>
+  <lifecycle>
+    <id>scan</id>
+    <phases>
+    <phase>
+        <id>validate</id>
+        <executions>
+          <execution>
+            <goals>
+              <goal>project-only</goal>
+            </goals>
+          </execution>
+          <execution>
+            <goals>
+              <goal>application</goal>
+            </goals>
+          </execution>
+        </executions>
+      </phase>
+    </phases>
+  </lifecycle>
+</lifecycles>

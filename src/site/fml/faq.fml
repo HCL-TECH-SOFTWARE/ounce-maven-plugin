@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<faqs id="FAQ" title="Frequently Asked Questions">
+ <part id="General">
+   <faq id="q1">
+     <question>Question 1</question>
+     <answer>
+        <p>
+            Answer 1
+        </p>
+     </answer>
+      </faq>
+ </part>
+</faqs>

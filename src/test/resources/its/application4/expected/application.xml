@@ -1,0 +1,24 @@
+<object-stream>
+  <application>
+    <name>ounce-application-4</name>
+    <applicationRoot>.</applicationRoot>
+    <projects>
+      <project>
+        <name>foo</name>
+        <path>/etc/bin/foo</path>
+      </project>
+      <project>
+        <name>foo2</name>
+        <path>${basedir}</path>
+      </project>
+      <project>
+        <name>ounce-application-4</name>
+        <path>.</path>
+      </project>
+      <project>
+        <name>ounce-test-b</name>
+        <path>b</path>
+      </project>
+    </projects>
+  </application>
+</object-stream>

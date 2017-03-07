@@ -1,0 +1,50 @@
+  ------
+  Scan Mojo Usage
+  ------
+  Brian Fox
+  ------
+  Nov 2007
+  ------
+
+Report Mojo Usage
+ 
+  Brief examples on how to use the report goal.
+ 
+* Generic Plugin configuration information
+
+  See the following links for information about including and configuring plugins in your project:
+  
+  *{{{http://maven.apache.org/guides/mini/guide-configuring-plugins.html}Configuring Plugins}}
+  
+  *{{{http://maven.apache.org/guides/plugin/guide-java-plugin-development.html}Plugin Development}}
+
+  *{{{http://maven.apache.org/guides/introduction/introduction-to-plugin-prefix-mapping.html}Plugin Prefix}}
+
+* The <<<ounce:report>>> mojo
+  
+    If you want to include the results of the scan as part of your site, configure your pom like this:
+    
++---+
+<project>
+  [...]
+   <reporting>
+     <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>ounce-maven-plugin</artifactId>
+        <configuration>
+          <!--insert scan configuration here. It is the same as the scan mojo--> 
+          <!--
+          <applicationFile>webgoat.paf</applicationFile>
+          <installDir>C:\Program Files\Ounce Labs</installDir>
+          <pathVariableMap>
+            <WebGoatWS>C:\WebGoat</WebGoatWS>
+          </pathVariableMap>
+          -->
+         </configuration>
+       </plugin>
+     </plugins>
+   </reporting>
+  [...]
+</project>
++---+	

@@ -1,0 +1,15 @@
+
+  <application>
+    <name>external-application-2</name>
+    <applicationRoot>.</applicationRoot>
+    <projects>
+      <project>
+        <name>ounce-application-e</name>
+        <path>uis/e</path>
+      </project>
+      <project>
+        <name>ounce-test-f</name>
+        <path>services/f</path>
+      </project>
+    </projects>
+  </application>

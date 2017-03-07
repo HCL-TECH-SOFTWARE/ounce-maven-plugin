@@ -1,0 +1,73 @@
+   
+  ------
+  Introduction
+  ------
+  Brian Fox
+  ------
+  Nov 2007
+  ------
+
+Ounce Maven Plugin
+
+  Ounce Labs' solutions enable organizations to identify, prioritize, and eliminate business
+risk to enterprises caused by software security vulnerabilities.  Ounce analyzes application
+source code to provide the most complete and accurate analysis of application vulnerabilities
+and their relative priorities, enabling business users and IT professionals to optimize 
+their resources in resolving the most critical issues.
+
+  The Ounce/Maven Plugin makes it easy to integrate static source code analysis into your Maven
+build framework.  Specialized goals allow you to extend the Maven framework to generate:
+
+	*Ounce Project and Application files
+	
+	*Source code security scans
+	
+	*Comprehensive security reports
+	
+  For more information about Ounce Labs' solution, see {{{http://www.ouncelabs.com}www.ouncelabs.com}}.
+
+* Goals Overview
+
+  The Ounce plugin has several goals:
+
+  *{{{project-mojo.html}ounce:project}} creates an Ounce project File from the Command Line.
+  
+  *{{{project-only-mojo.html}ounce:project-only}} creates an Ounce project File as part of the build.
+
+  *{{{application-mojo.html}ounce:application}} creates an Ounce application file.
+  
+  *{{{scan-mojo.html}ounce:scan}} performs an on demand scan.
+  
+  *{{{report-mojo.html}ounce:report}} performs an on demand scan and publishes the results to the site.
+  
+  []
+
+* Usage
+
+   Instructions on how to use the ounce plugin goals:
+   
+   *{{{usage/project.html}Create a Project file}}
+   
+   *{{{usage/application.html}Create an Application file}}
+   
+   *{{{usage/scan.html}Perform an on demand scan}}  
+   
+   *{{{usage/report.html}Perform a scan as part of the site generation}}    
+
+   []
+* Examples
+
+  The following examples show how to use the ounce plugin in more advanced use-cases:
+  
+    *{{{examples/compiler.html}Configuring Compiler Settings}}
+  
+  []
+
+* Resources
+
+  * {{{http://www.ouncelabs.com}OunceLabs}}
+
+  []
+
+
+

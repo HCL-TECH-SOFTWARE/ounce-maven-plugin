@@ -1,0 +1,15 @@
+<object-stream>
+  <project>
+    <name>ounce-project-2</name>
+    <projectRoot>.</projectRoot>
+    <sourceRoots>
+      <string>src/main/java</string>
+      <string>src/test/java</string>
+    </sourceRoots>
+    <webRoot>target/mywebapp-location</webRoot>
+    <classPath>%M2_REPO%/org/apache/maven/maven-artifact/2.0.6/maven-artifact-2.0.6.jar;%M2_REPO%/org/codehaus/plexus/plexus-utils/1.4.1/plexus-utils-1.4.1.jar;target/classes;target/test-classes</classPath>
+    <jdkName>myJDK</jdkName>
+    <packaging>war</packaging>
+    <compilerOptions>debug=true,verbose=true</compilerOptions>
+  </project>
+</object-stream>

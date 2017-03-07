@@ -1,0 +1,72 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+<!--This project is testing that when bound in the pom, the plugin is still 
+functioning and is able to pull in the correct sources from the other plugins
+It also checks again that fullpaths are working in all cases-->
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>test</groupId>
+    <artifactId>ounce-maven-plugin-it-parent</artifactId>
+	<version>1</version>
+  </parent>
+  
+  <artifactId>ounce-project-7</artifactId>
+  <packaging>jar</packaging>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-artifact</artifactId>
+      <version>2.0.6</version>
+    </dependency>
+  </dependencies>
+	<build>
+      <plugins>
+      <plugin>
+	    <groupId>org.codehaus.mojo</groupId>
+		<artifactId>ounce-maven-plugin</artifactId>
+          <executions>
+            <execution>
+              <id>project</id>
+              <goals>
+                <goal>project-only</goal>
+              </goals>
+              <configuration>
+                <!--use defaults...just checking that the sources are picked up from the other plugins when bound in the pom-->
+                <includeTestSources>true</includeTestSources>
+              </configuration>
+            </execution>	
+          </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+		<version>1.0</version>
+        <executions>
+          <execution>
+            <id>add-source</id>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>${basedir}/generated-sources</source>
+              </sources>
+            </configuration>
+          </execution>
+		  <execution>
+            <id>add-test-source</id>
+            <goals>
+              <goal>add-test-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>${basedir}/generated-test-sources</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+	</build>
+</project>

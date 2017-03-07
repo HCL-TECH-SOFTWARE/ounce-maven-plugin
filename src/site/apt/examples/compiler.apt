@@ -1,0 +1,42 @@
+  ------
+  Compiler Settings
+  ------
+  Brian Fox
+  ------
+  Oct 2007
+  ------
+
+Ounce Compiler Settings
+ 
+  This page provides information about configuring the compiler settings required by Ounce to analyze your project.
+ 
+* Background
+
+	The Ounce application performs security analysis of your source. To do this, it runs a compiler and sets flags to allow instrumentation of the source and bytecode.
+	The Ounce Maven plugin is able to determine most of the settings required for compilation directly from your pom. Occasionally, some settings may need to be tweaked.
+
+* Classpath Scope
+
+    Maven is able to automatically determine the required classpath for compilation. By default, the <<<compile>>> classpath is passed to Ounce. This is the same
+	classpath used by the <<<maven-compiler-plugin>>> to build your source in a normal build. The default should be sufficient in nearly all use cases.
+	
+	You may change the scope of the classpath provided to Ounce by changing the <<<classpathScope>>> parameter. Valid options are: compile, test, runtime and system. Note that the 
+	value of this may be upgraded to the test scope if the <<<includeTestSources>>> parameter is set. (see below)
+	
+	You may read more about classpaths and dependencies {{{http://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html}here.}}
+
+* Compile Sources
+
+   The compile source roots are automatically determined and passed to Ounce. This includes the default <<<src/main/java>>> as well as any source roots configured
+   via plugins such as the {{{http://mojo.codehaus.org/build-helper-maven-plugin}build-helper-maven-plugin}}. If you would like to include your test source in the analysis,
+   you may do so by setting the <<<includeTestSources>>> parameter. Setting this value will include all test sources as well as automatically set the <<<classpathScope>>> value to <<<test>>>.
+   
+* Compiler Settings
+
+  Ounce will normally handle the java compiler options correctly, but additional parameters may be
+  passed using the <<<javaCompilerOptions>>> parameter. This command line will be passed
+  directly to the compiler and thus you should refer to your compiler documentation for the 
+  proper flags and syntax.
+
+
+   	

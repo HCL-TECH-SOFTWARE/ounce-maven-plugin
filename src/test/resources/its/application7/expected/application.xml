@@ -1,0 +1,32 @@
+<object-stream>
+  <application>
+    <name>ounce-application-7</name>
+    <applicationRoot>.</applicationRoot>
+    <projects>
+      <project>
+        <name>ounce-application-a</name>
+        <path>a</path>
+      </project>
+      <project>
+        <name>ounce-application-c</name>
+        <path>${basedir}/../externalApps/1/c</path>
+      </project>
+      <project>
+        <name>ounce-application-e</name>
+        <path>../externalApps/2/uis/e</path>
+      </project>
+      <project>
+        <name>ounce-test-b</name>
+        <path>b</path>
+      </project>
+      <project>
+        <name>ounce-test-d</name>
+        <path>${basedir}/../externalApps/1/d</path>
+      </project>
+      <project>
+        <name>ounce-test-i</name>
+        <path>../externalApps/3/services/i</path>
+      </project>
+    </projects>
+  </application>
+</object-stream>

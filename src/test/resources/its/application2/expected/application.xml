@@ -1,0 +1,12 @@
+<object-stream>
+  <application>
+    <name>ounce-application-2</name>
+    <applicationRoot>.</applicationRoot>
+    <projects>
+      <project>
+        <name>ounce-application-a</name>
+        <path>a</path>
+      </project>
+    </projects>
+  </application>
+</object-stream>

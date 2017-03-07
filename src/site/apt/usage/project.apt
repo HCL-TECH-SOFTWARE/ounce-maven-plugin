@@ -1,0 +1,89 @@
+  ------
+  Project Mojo Usage
+  ------
+  Brian Fox
+  ------
+  Oct 2007
+  ------
+
+Project Mojo Usage
+ 
+  Brief examples on how to use the project goals.
+ 
+* Generic Plugin configuration information
+
+  See the following links for information about including and configuring plugins in your project:
+  
+  *{{{http://maven.apache.org/guides/mini/guide-configuring-plugins.html}Configuring Plugins}}
+  
+  *{{{http://maven.apache.org/guides/plugin/guide-java-plugin-development.html}Plugin Development}}
+
+  *{{{http://maven.apache.org/guides/introduction/introduction-to-plugin-prefix-mapping.html}Plugin Prefix}}
+ 
+* The <<<ounce:project>>> mojo
+  
+    If you want to generate the Ounce project on demand via the command line like:
+	
++---+
+mvn ounce:project
++---+
+
+	you must not put the configuration inside the <executions> tag. Your configuration should look like this:
+		
++---+
+<project>
+  [...]
+  <build>
+   <plugins>
+     <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>ounce-maven-plugin</artifactId>
+        <configuration>
+          
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  [...]
+</project>
++---+	
+
+  The <<<project>>> goal will fork the build and execute the current project up to the <<<process-sources>>> phase. This is done so plugins that generate sources
+  and add another compilation source folders can be detected by the Ounce plugin. These additional source folders will be added to your project automatically.
+  
+  Since the build must be forked when executing via the command line, this goal should not be bound to your build or it cause certain parts of the build to execute
+  multiple times. If you wish to have your project file created automatically as part of your build, see the <<<project-only>>> goal in the next section.
+  
+* The <<<ounce:project-only>>> mojo
+
+   
+     []
+	The <<<project-only>>> mojo is used to bind the plugin so it executes along with your build. Configure it using an execution as shown below. Once
+	bound, the mojo will automatically execute as part of the <<<package>>> phase.
+
++---+
+<project>
+  [...]
+  <build>
+   <plugins>
+     <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>ounce-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>create ounce project</id>
+            <goals>
+              <goal>project-only</goal>
+            </goals>
+            <configuration>
+              <!--insert mojo configuration here-->
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+  [...]
+</project>
++---+
+ 
