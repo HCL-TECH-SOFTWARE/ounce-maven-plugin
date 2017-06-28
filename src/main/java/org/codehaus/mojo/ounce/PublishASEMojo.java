@@ -19,6 +19,16 @@ import org.codehaus.plexus.util.StringUtils;
 
 public class PublishASEMojo extends AbstractOunceMojo {
 	
+	
+	
+	/**
+	 * This is the name of the application inside of AppScan Enterprise
+	 *
+	 * @parameter expression="${ounce.aseApplication}"
+	 */
+	
+	String aseApplication;
+	
 	/**
 	 * This is the assessment file that will be published to AppScan Enterprise
 	 * 
@@ -74,7 +84,7 @@ public class PublishASEMojo extends AbstractOunceMojo {
 		try
 		{
 			OunceCore core = getCore();
-			core.publishASE(assessmentOutput, caller, folderID, installDir, waitForScan, getLog());
+			core.publishASE(aseApplication, assessmentOutput, caller, folderID, installDir, waitForScan, getLog());
 		}
 		catch(Exception ex)
 		{

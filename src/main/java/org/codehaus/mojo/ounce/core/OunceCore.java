@@ -110,7 +110,7 @@ public interface OunceCore
                boolean includeTraceCoverage, String appserver_type, Log log )
         throws OunceCoreException;
     
-    void publishASE(String assessmentFile, String caller, String folderID,
+    void publishASE(String aseApplication, String assessmentFile, String caller, String folderID,
     		String installDir, boolean wait, Log log) throws OunceCoreException;
 
     /**

@@ -2,15 +2,17 @@ package org.codehaus.mojo.ounce.core;
 
 public class OunceCorePublishASE {
 	
-	String assessmentFile;
-	String caller;
-	String folderID;
-	String installDir;
+	private final String assessmentFile;
+	private final String caller;
+	private final String folderID;
+	private final String installDir;
+	private final String aseApplication;
 	boolean wait;
 	
-	public OunceCorePublishASE(String assessmentFile, String caller,
+	public OunceCorePublishASE(String aseApplication, String assessmentFile, String caller,
 			String folderID, String installDir, boolean wait) {
 		super();
+		this.aseApplication = aseApplication;
 		this.assessmentFile = assessmentFile;
 		this.caller = caller;
 		this.folderID = folderID;
@@ -34,4 +36,9 @@ public class OunceCorePublishASE {
 	public boolean isWait() {
 		return wait;
 	}
+
+	public String getAseApplication() {
+		return aseApplication;
+	}
+
 }
