@@ -347,6 +347,11 @@ ounce:publishASE<br>
 
   Available parameters:
 
+    aseApplication
+      Optional. Name of the application that is going to be used to publish on
+			the AppScan Enterprise.
+      Expression: ${ounce.aseApplication}
+
     assessmentOutput (Default: ${basedir}/${project.artifactId}.ozasmt)
       This is the assessment file that will be published to AppScan Enterprise
       Expression: ${ounce.assessmentOutput}
