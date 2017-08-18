@@ -81,7 +81,7 @@ public class TestProjectMojo
         mojo.setProject( getProject() );
         mojo.setClasspathScope( Artifact.SCOPE_SYSTEM );
 
-        String classpath = mojo.buildClasspath();
+        String classpath = mojo.getClasspath();
 
         String expectedResult = "/repo/test.jar" + File.pathSeparator + "/repo/test2.jar";
         assertEquals( expectedResult, classpath );

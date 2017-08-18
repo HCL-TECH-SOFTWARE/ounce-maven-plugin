@@ -79,13 +79,11 @@ public interface OunceCore
      * @throws OunceCoreException
      */
     void createProject( String baseDir, String name, String jspCompilerInfoName, String jspCompilerType, String projectRoot, List sourceRoots, String webRoot,
-                        String classPath, String jdkName, String compilerOptions, String packaging, Map ounceOptions,
-                        boolean forceWeb, boolean analyzeStrutsFramework, boolean importStrutsValidation, String projectDir, String[] srcRoot,
-                        Log log )
+                        String classPath, String jdkName, String compilerOptions, String packaging, Map ounceOptions, boolean forceWeb, boolean analyzeStrutsFramework,
+                        boolean importStrutsValidation, String projectDir, Log log )
         throws OunceCoreException;
 
-    OunceCoreProject readProject( String path, Log log )
-        throws OunceCoreException;
+    OunceCoreProject readProject( String path, Log log ) throws OunceCoreException;
 
     /**
      * Initiate a scan on the assessment server.

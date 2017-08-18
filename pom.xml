@@ -38,7 +38,6 @@
   <groupId>org.codehaus.mojo</groupId>
   <artifactId>ounce-maven-plugin</artifactId>
   <version>1.6.0</version>
-
   <packaging>maven-plugin</packaging>
 
   <name>Ounce Maven Plugin</name>
@@ -53,27 +52,6 @@
     <developerConnection>scm:svn:https://svn.codehaus.org/mojo/tags/ounce-maven-plugin-1.3</developerConnection>
     <url>http://fisheye.codehaus.org/browse/mojo/tags/ounce-maven-plugin-1.3</url>
   </scm>
-  
-  <developers>
-    <developer>
-      <id>brianf</id>
-      <name>Brian Fox</name>
-      <email>brianf@apache.org</email>
-      <roles>
-        <role>Lead Maven Developer</role>
-      </roles>
-      <timezone>-5</timezone>
-    </developer>
-    <developer>
-      <id>sheadrick</id>
-      <name>Sam Headrick</name>
-      <roles>
-        <role>Lead Ounce Developer</role>
-      </roles>
-      <organization>OunceLabs</organization>
-      <timezone>-5</timezone>
-    </developer>
-  </developers>
 
   <build>
     <plugins>
@@ -139,7 +117,6 @@
           <artifactId>maven-compiler-plugin</artifactId>
           <version>2.3.2</version>
           <configuration>
-            <!-- or whatever version you use -->
             <source>1.7</source>
             <target>1.7</target>
           </configuration>

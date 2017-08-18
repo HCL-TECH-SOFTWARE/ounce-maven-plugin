@@ -95,8 +95,7 @@ public class OunceCoreXml
     public void createProject( String baseDir, String theName, String jspCompilerInfoName, String jspCompilerType, String theProjectRoot, List theSourceRoots,
                                String theWebRoot, String theClassPath, String theJdkName, String theCompilerOptions,
                                String packaging, Map ounceOptions, boolean forceWeb,
-                               boolean analyzeStrutsFramework, boolean importStrutsValidation, String projectDir,
-                               String[] srcRoot, Log log )
+                               boolean analyzeStrutsFramework, boolean importStrutsValidation, String projectDir, Log log )
         throws OunceCoreException
     {
         if ( StringUtils.isNotEmpty( theClassPath ) )

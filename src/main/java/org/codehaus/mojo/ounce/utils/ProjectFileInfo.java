@@ -96,10 +96,11 @@ public class ProjectFileInfo
     {
         return !isDirectory();
     }
- @Override
 
-    public boolean isSymbolicLink() {
-        // TODO Auto-generated method stub
-        return false;
-     }
+	@Override
+	public boolean isSymbolicLink() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }
