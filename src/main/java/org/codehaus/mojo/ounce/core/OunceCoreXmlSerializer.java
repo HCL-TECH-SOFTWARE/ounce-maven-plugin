@@ -36,13 +36,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
-
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -62,46 +60,33 @@ import org.w3c.dom.NodeList;
  * @author <a href="mailto:sam.headrick@ouncelabs.com">Sam Headrick</a>
  * @plexus.component role="org.codehaus.mojo.ounce.core.OunceCore" role-hint="ouncexml"
  */
-public class OunceCoreXmlSerializer
-    implements OunceCore
+public class OunceCoreXmlSerializer implements OunceCore
 {
-
     private HashMap <String,Object> m_existingProjectAttributes;
 
-    public void createApplication( String baseDir, String theName,String applicationRoot, List theProjects,
-                                   Map options, Log log )
-        throws OunceCoreException
+    public void createApplication(String baseDir, String theName,String applicationRoot, List theProjects, Map options, Log log) throws OunceCoreException
     {
         // sort them to avoid implementation details messing
         // up the order for testing.
-        Collections.sort( theProjects );
+        Collections.sort(theProjects);
 
-        log.info("Writing Application parameters to xml." );
-        //log.info("Creating the application file in " + baseDir);
-        //log.info("Creating the application file " + theName + ".paf");
+        log.info("Writing Application parameters to xml...");
 
         try
         {
             m_existingProjectAttributes = new HashMap<String,Object>();
-            
-            /*for(Object o : theProjects)
-            {
-            	log.info(o.toString());
-            }*/
 
             // need to read the Application in first if it exists
             // create the XML Document
             Document xmlDoc;
             Element root = null;
-            String filePath = baseDir + File.separator + theName + ".paf";
-            String prjPath = baseDir;
-            File pafFile = new File( filePath );
-            String convPath = null;
+            File pafFile = new File(baseDir, theName + ".paf");
+
             if ( pafFile.exists() )
             {
                 // load up the PAF
                 DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-                log.info("Reading paf: '" + filePath + "'..." );
+                log.info("Reading existing paf: '" + pafFile.getAbsolutePath() + "'..." );
                 xmlDoc = builder.parse( pafFile );
 
                 NodeList nodes = xmlDoc.getChildNodes();
@@ -128,7 +113,6 @@ public class OunceCoreXmlSerializer
                                 NamedNodeMap attributes = child.getAttributes();
                                 String projectPath = attributes.getNamedItem( "path" ).getNodeValue();
                                 log.debug("OunceCoreXmlSerializer: projectpath: " + projectPath);
-                                prjPath = projectPath;
                            
                                 //m_existingProjectAttributes.put( convPath, attributes);
                                 m_existingProjectAttributes.put( projectPath, attributes);
@@ -137,36 +121,37 @@ public class OunceCoreXmlSerializer
                         }
 
                         // now add the new projects so they come first
-                        log.debug("OunceCoreXmlSerializer: file path: " + filePath + " Root: " + root);
-                        insertChildProjects( xmlDoc, root, theProjects, prjPath, log );
+                        log.debug("OunceCoreXmlSerializer: file path: " + pafFile.getAbsolutePath() + " Root: " + root);
+                        insertChildProjects( xmlDoc, root, theProjects, pafFile.getAbsolutePath(), log );
                     }
                 }
                 if ( root == null )
                 {
                     // every paf should have an Application element
-                    throw new OunceCoreException( "The existing application file '" + filePath
+                    throw new OunceCoreException( "The existing application file '" + pafFile.getAbsolutePath()
                         + "' is not in a valid format and cannot be updated." );
                 }
             }
             else
             {
-                log.info( "Creating new paf: '" + filePath + "'..." );
+                log.info( "Creating new application file: '" + pafFile.getAbsolutePath() + "'..." );
                 xmlDoc = new DocumentImpl();
                 root = xmlDoc.createElement( "Application" );
                 String name = theName;
                 log.info("Application Name: " + theName);
                 root.setAttribute( "name", theName);
                 xmlDoc.appendChild( root );
-                log.debug("OunceCoreXmlSerializer: Else filepath: " + filePath);
-                insertChildProjects( xmlDoc, root, theProjects,prjPath,log );
+                insertChildProjects( xmlDoc, root, theProjects,pafFile.getAbsolutePath(),log );
             }
 
             // write out the XML
             log.info("Writing XML ....");
+            pafFile.getParentFile().mkdirs();
             XmlWriter writer = new XmlWriter( true );
             writer.setWriteEmptyValues( false );
             writer.setDefaultToAttributesOnSameLine( true );
-            writer.saveXmlFile( filePath, xmlDoc );
+            writer.saveXmlFile( pafFile.getAbsolutePath(), xmlDoc );
+            log.info("Done.");
         }
         catch ( Exception ex )
         {
@@ -174,7 +159,7 @@ public class OunceCoreXmlSerializer
         }
     }
 
-    private void insertChildProjects( Document xmlDoc, Element root, List theProjects,String applicationFile, Log log )
+    private void insertChildProjects( Document xmlDoc, Element root, List theProjects,String applicationFile, Log log ) throws IOException
     {
         // sort the projects by file path (in reverse order because they are written in reverse)
         Collections.sort( theProjects, new Comparator()
@@ -192,11 +177,10 @@ public class OunceCoreXmlSerializer
         for ( int i = 0; i < theProjects.size(); i++ )
         {
             OunceProjectBean projectBean = (OunceProjectBean) theProjects.get( i );
-            String projectPath = projectBean.getPath() + File.separator + projectBean.name + ".ppf";
-            String nameProj = projectBean.getName();
-            //String projectPath = projectBean.getPath();
+            String projectPath = new File(projectBean.getPath(), projectBean.getName() + ".ppf").getCanonicalPath();
+
             log.debug("OunceCoreXmlSerializer: Project Path: " + projectPath);
-            log.debug("OunceCoreXmlSerializer: Name: " + nameProj);
+            log.debug("OunceCoreXmlSerializer: Name: " + projectBean.getName());
 
             Element project = xmlDoc.createElementNS( null, "Project" );
 
@@ -208,28 +192,8 @@ public class OunceCoreXmlSerializer
                 existingAttribs.removeNamedItem( "language_type" );
             }
 
-            String fullPath = projectPath;
-            log.debug("OunceCoreXmlSerializer: Project Full Path: " + fullPath);
-            
-            //String startsWithCheck = "." + File.separator;
-            if(Utils.isConvertible(projectPath, applicationFile))
-            {
-            	fullPath = Utils.makeRelative(projectPath, applicationFile);
-            	log.debug("OunceCoreXmlSerializer: After conversion Project Path: " + fullPath);
-            	
-            }
-            else
-            {
-            	fullPath = projectPath;
-            }
-            /*if ( fullPath.startsWith( "./" ) )
-            {
-                fullPath = startsWithCheck + projectPath;
-            }*/
-            
-            log.debug("OunceCoreXmlSerializer: set project path: " + fullPath);
-            project.setAttributeNS( null, "path", fullPath );
-            //project.setAttributeNS( null, "path", projectPath );
+            projectPath = Utils.makeRelative(projectPath, new File(applicationFile).getParent());
+            project.setAttributeNS( null, "path", projectPath );
             project.setAttributeNS( null, "language_type", "2" );
 
             if ( existingAttribs != null )
@@ -260,90 +224,59 @@ public class OunceCoreXmlSerializer
     }
 
     public void createProject( String baseDir, String theName, String jspCompilerInfoName, String jspCompilerType, String projectRoot, List theSourceRoots,
-                               String theWebRoot, String theClassPath, String theJdkName, String compilerOptions,
-                               String packaging, Map options, boolean forceWeb,
-                               boolean analyzeStrutsFramework, boolean importStrutsValidation, String projectDir,
-                               String[] srcRoot, Log log )
+                               String theWebRoot, String theClassPath, String theJdkName, String compilerOptions, String packaging, Map options, boolean forceWeb,
+                               boolean analyzeStrutsFramework, boolean importStrutsValidation, String projectDir, Log log )
         throws OunceCoreException
     {
-        log.info( "Writing Project parameters to xml." );
-
-        // place all of the Project properties into a property bundle
-        Properties projectProperties = new Properties();
+        // place all of the Project attributes into a property bundle
+        Properties projectAttrs = new Properties();
 
         // set the dynamic values
-        projectProperties.setProperty( "name", theName );
+        projectAttrs.setProperty( "name", theName );
 
         // set the constant values
-        projectProperties.setProperty("file_extension_set_name", "java");
-        projectProperties.setProperty( "language_type", "2" );
-        projectProperties.setProperty( "default_configuration_name", "Configuration 1" );
+        projectAttrs.setProperty("file_extension_set_name", "java");
+        projectAttrs.setProperty( "language_type", "2" );
+        projectAttrs.setProperty( "default_configuration_name", "Configuration 1" );
         
         // set jsp_compiler_info_name if provided
-        if ( StringUtils.isNotEmpty(jspCompilerInfoName) ) {
-        	projectProperties.setProperty( "jsp_compiler_info_name", jspCompilerInfoName );
-        }
+        if ( StringUtils.isNotEmpty(jspCompilerInfoName) )
+        	projectAttrs.setProperty( "jsp_compiler_info_name", jspCompilerInfoName );
         
         // set jsp_compiler_type if provided
-        if ( StringUtils.isNotEmpty(jspCompilerType) ) {
-        	projectProperties.setProperty( "jsp_compiler_type", jspCompilerType );
-        }
-
-        if ( options != null )
-        {
-            Set keys = options.keySet();
-            Iterator it = keys.iterator();
-            while ( it.hasNext() )
-            {
-                String key = (String) it.next();
-                String value = (String) options.get( key );
-                projectProperties.setProperty( key, value );
-                log.debug("OunceCoreXmlSerializer: Key: " + key + " Value: " + value);
-            }
-        }
+        if ( StringUtils.isNotEmpty(jspCompilerType) )
+        	projectAttrs.setProperty( "jsp_compiler_type", jspCompilerType );
 
         if ( !StringUtils.isEmpty( theWebRoot ) && (forceWeb || ( !StringUtils.isEmpty( packaging ) && packaging.equals( "war" ) ) ) )
-        {
-            projectProperties.setProperty( "web_context_root_path", theWebRoot.trim() );
-        }
+            projectAttrs.setProperty( "web_context_root_path", theWebRoot.trim() );
         else
-        {
             theWebRoot = null;
-        }
 
         if ( !StringUtils.isEmpty( compilerOptions ) )
-        {
-            projectProperties.setProperty( "compiler_options", compilerOptions );
-        }
+            projectAttrs.setProperty( "compiler_options", compilerOptions );
         
-        if ( analyzeStrutsFramework != false ) {
-        	projectProperties.setProperty( "analyze_struts_framework", "true" );
-        } 
+        if ( analyzeStrutsFramework != false )
+        	projectAttrs.setProperty( "analyze_struts_framework", "true" );
         
-        if ( importStrutsValidation != false ) {
-        	projectProperties.setProperty( "import_struts_validation", "true" );
-        }
+        if ( importStrutsValidation != false )
+        	projectAttrs.setProperty( "import_struts_validation", "true" );
 
         try
         {
             HashMap existingConfigurationAttribs = new HashMap();
             HashMap existingSourceAttribs = new HashMap();
+            HashMap<String, String> existingProperties = new HashMap<String, String>();
             ArrayList excludedSources = new ArrayList();
 
             Document xmlDoc;
             Element root = null;
-            //String filePath = baseDir;
-            String filePath = projectDir;
-            //String filePath = projectRoot;
-            
-            
-                        
-            File ppfFile = new File( filePath );
+     
+            File ppfFile = new File(projectDir, theName + ".ppf");
             if ( ppfFile.exists() )
             {
                 // need to preserve information that could be in the ppf (Project validation routines, etc.)
                 DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-                log.info( "Reading ppf: '" + filePath + "'..." );
+                log.info( "Reading ppf: '" + ppfFile.getAbsolutePath() + "'..." );
                 xmlDoc = builder.parse( ppfFile );
                 NodeList nodes = xmlDoc.getChildNodes();
                 for ( int i = 0; i < nodes.getLength(); i++ )
@@ -364,14 +297,12 @@ public class OunceCoreXmlSerializer
 
                             // Don't preserve Configuration and Source (but remember their attributes for
                             // later). Everything else should be left alone.
-                            if ( childName.equals( "Configuration" ) )
-                            {
+                            if (childName.equals("Configuration")) {
                                 String configurationName = attributes.getNamedItem( "name" ).getNodeValue();
                                 existingConfigurationAttribs.put( configurationName, attributes );
                                 node.removeChild( child );
                             }
-                            else if ( childName.equals( "Source" ) )
-                            {
+                            else if(childName.equals("Source")) {
                                 String sourcePath = attributes.getNamedItem( "path" ).getNodeValue();
                                 log.info("Source Path: " + sourcePath);
                                 String excludedStr = attributes.getNamedItem( "exclude" ).getNodeValue();
@@ -382,6 +313,20 @@ public class OunceCoreXmlSerializer
                                 existingSourceAttribs.put( sourcePath, attributes );
                                 node.removeChild( child );
                             }
+                            else if(childName.equals("Properties")) {
+                            	//Store existing properties to be merged with any updated properties.
+                            	NodeList properties = child.getChildNodes();
+                            	for(int k = 0; k < properties.getLength(); k++) {
+                            		Node property = properties.item(k);
+                            		if(property.getNodeName().equals("Property")) {
+                            			Node propertyName = property.getAttributes().getNamedItem("name");
+                            			Node propertyValue = property.getAttributes().getNamedItem("value");
+                            			if(propertyName != null && propertyValue != null)
+	                            		existingProperties.put(propertyName.getNodeValue(), propertyValue.getNodeValue());
+                            		}
+                            	}
+                            	node.removeChild(child);
+                            }
                             // shouldn't need to handle SourceFile here because they come after Source
                         }
                     }
@@ -389,37 +334,42 @@ public class OunceCoreXmlSerializer
                 if ( root == null )
                 {
                     // every ppf should have a Project element
-                    throw new OunceCoreException( "The existing project file '" + filePath
+                    throw new OunceCoreException( "The existing project file '" + ppfFile.getAbsolutePath()
                         + "' is not in a valid format and cannot be updated." );
                 }
             }
             else
             {
-                log.info( "Creating new Document..." );
                 // create a new XML Document
                 xmlDoc = new DocumentImpl();
                 root = xmlDoc.createElement( "Project" );
                 xmlDoc.appendChild( root );
             }
 
-            // enumerate over the Project properties and set them as attributes on the Project node
-            Enumeration propertyNames = projectProperties.propertyNames();
+            // enumerate over the Project attributes and set them as attributes on the Project node
+            Enumeration propertyNames = projectAttrs.propertyNames();
             while ( propertyNames.hasMoreElements() )
             {
                 Object propertyNameObject = propertyNames.nextElement();
                 String name = (String) propertyNameObject;
-                String value = projectProperties.getProperty( name );
+                String value = projectAttrs.getProperty( name );
                 root.setAttribute( name, value );
             }
             
-            insertSources( xmlDoc, root, baseDir, theSourceRoots, theWebRoot, existingSourceAttribs, excludedSources );
-            insertConfigurations( xmlDoc, root, theClassPath, theJdkName, existingConfigurationAttribs );
+            insertSources(xmlDoc, root, baseDir, theSourceRoots, theWebRoot, existingSourceAttribs, excludedSources);
+            insertConfigurations(xmlDoc, root, theClassPath, theJdkName, existingConfigurationAttribs);
+            
+            //Merge any existing properties with new properties and insert
+            existingProperties.putAll(options);
+            insertProperties(xmlDoc, root, existingProperties);
 
             // write out the XML
+            log.info( "Writing ppf file..." );
+            ppfFile.getParentFile().mkdirs();
             XmlWriter writer = new XmlWriter( true );
             writer.setWriteEmptyValues( false );
             writer.setDefaultToAttributesOnSameLine( true );
-            writer.saveXmlFile( filePath, xmlDoc );
+            writer.saveXmlFile(ppfFile.getAbsolutePath(), xmlDoc);
         }
         catch ( Exception ex )
         {
@@ -430,15 +380,15 @@ public class OunceCoreXmlSerializer
     private void insertConfigurations( Document xmlDoc, Element root, String theClassPath, String theJdkName,
                                        HashMap existingConfigurationAttribs )
     {
-        // place all of the Configuration properties into a property bundle
-        Properties configProperties = new Properties();
+        // place all of the Configuration attributes into a property bundle
+        Properties configAttributes = new Properties();
         String configurationName = "Configuration 1";
 
-        configProperties.setProperty( "name", configurationName );
-        configProperties.setProperty( "class_path", theClassPath );
+        configAttributes.setProperty( "name", configurationName );
+        configAttributes.setProperty( "class_path", theClassPath );
         if ( !StringUtils.isEmpty( theJdkName ) )
         {
-            configProperties.setProperty( "jdk_name", theJdkName.trim() );
+            configAttributes.setProperty( "jdk_name", theJdkName.trim() );
         }
 
         // add the Configuration element to Project. Java Projects always have exactly one Configuration
@@ -446,14 +396,14 @@ public class OunceCoreXmlSerializer
         NamedNodeMap existingConfigAttribs = (NamedNodeMap) existingConfigurationAttribs.get( configurationName );
 
         // give the Configuration all its attributes
-        Enumeration propertyNames = configProperties.propertyNames();
+        Enumeration propertyNames = configAttributes.propertyNames();
         while ( propertyNames.hasMoreElements() )
         {
             Object propertyNameObject = propertyNames.nextElement();
             String name = (String) propertyNameObject;
-            String value = configProperties.getProperty( name );
+            String value = configAttributes.getProperty( name );
             configuration.setAttributeNS( null, name, value );
-            if ( existingConfigAttribs != null )
+            if (existingConfigAttribs != null && existingConfigAttribs.getNamedItem(name) != null)
             {
                 existingConfigAttribs.removeNamedItem( name );
             }
@@ -560,43 +510,44 @@ public class OunceCoreXmlSerializer
         				     				
         			}
         		}
-        	}//end of for loop
-        	
-        }// end of else block
-    }// end of method insertSources
+        	}
+        }
+    }
 
+    private void insertProperties(Document xmlDoc, Element root, Map<String, String> properties) {
+    	Element propertiesElement = xmlDoc.createElementNS( null, "Properties" );
+    	for(String key : properties.keySet()) {
+    		Element propertyElement = xmlDoc.createElementNS( null, "Property" );
+    		propertyElement.setAttribute("name", key);
+    		propertyElement.setAttribute("value", properties.get(key));
+    		propertiesElement.appendChild(propertyElement);
+    	}
+    	root.appendChild(propertiesElement);
+    }
+    
     private void addSourceElement( Document xmlDoc, Element root, String sourceRoot, String defaultWeb,
                                    boolean forceWeb, HashMap existingSourceAttribs )
     {
         Element source = xmlDoc.createElementNS( null, "Source" );
+        source.setAttributeNS( null, "path", sourceRoot );
         NamedNodeMap existingAttribs = (NamedNodeMap) existingSourceAttribs.get( sourceRoot );
 
         if ( existingAttribs != null )
-        {
-        	
             existingAttribs.removeNamedItem( "path" );
-        }
-        String fullSourceRoot = sourceRoot;
-                
-        source.setAttributeNS( null, "path", fullSourceRoot );
 
         if ( existingAttribs == null || existingAttribs.getNamedItem( "exclude" ) == null )
-        {
             source.setAttributeNS( null, "exclude", "false" );
-        }
+
         if ( forceWeb )
         {
             if ( existingAttribs != null )
-            {
                 existingAttribs.removeNamedItem( "web" );
-            }
+
             source.setAttributeNS( null, "web", defaultWeb );
 
         }
         else if ( existingAttribs == null || existingAttribs.getNamedItem( "web" ) == null )
-        {
             source.setAttributeNS( null, "web", defaultWeb );
-        }
 
         if ( existingAttribs != null )
         {
@@ -617,9 +568,7 @@ public class OunceCoreXmlSerializer
             root.insertBefore( source, child );
         }
         else
-        {
             root.appendChild( source );
-        }
     }
 
     private boolean pathAlreadyInNodeList( ArrayList list, String relPath )
@@ -667,14 +616,14 @@ public class OunceCoreXmlSerializer
     					return true;
     				}
     			
-    			}//end of inner loop
+    			}
     		}
     		else
     		{
     			break outer;
     		}
     		
-    	}//end of for loop
+    	}
     	
     	return false;
     }
@@ -689,9 +638,7 @@ public class OunceCoreXmlSerializer
             if ( pafFile.exists() )
             {
                 String parentDir = pafFile.getParent();
-                //String applicationFile = null;
                 String applicationFile = "File";
-                //String applicationName = null;
                 String applicationName = "name";
                 List projects = new ArrayList();
                 Map options = new HashMap();
@@ -723,32 +670,22 @@ public class OunceCoreXmlSerializer
                             if ( childName.equals( "Project" ) )
                             {
                             	
-                                String projectPath =
-                                    parentDir + File.separator
-                                        + child.getAttributes().getNamedItem( "path" ).getNodeValue();
-                                String newPath = Utils.makeRelative(projectPath, path);
-                                
-                                log.debug("OunceCoreXmlSerializer: projectPath: " +projectPath);
-                                
-                                //OunceCoreProject project = readProject( projectPath, log );
-                                OunceCoreProject project = readProject( newPath, log );
+                                String projectPath = new File(parentDir, child.getAttributes().getNamedItem( "path" ).getNodeValue()).getAbsolutePath();                                
+                                OunceCoreProject project = readProject( new File(projectPath).getAbsolutePath(), log );
                                 projects.add( project );
                             }
                         }
                     }
                 }
 
-                OunceCoreApplication application =
-                    new OunceCoreApplication( applicationName,applicationFile, projects, options );
+                OunceCoreApplication application = new OunceCoreApplication( applicationName,applicationFile, projects, options );
                 return application;
             }
         }
         catch ( Exception ex )
         {
             if ( log != null )
-            {
                 log.error( ex );
-            }
         }
 
         return null;
@@ -764,7 +701,6 @@ public class OunceCoreXmlSerializer
             File ppfFile = new File( path );
             if ( ppfFile.exists() )
             {
-                String projectRoot = ppfFile.getParent();
                 String projectName = null;
                 String jdkName = null;
                 String classPath = null;
@@ -850,9 +786,9 @@ public class OunceCoreXmlSerializer
                 }
 
                 OunceCoreProject project =
-                    new OunceCoreProject( projectName, projectRoot, sourceRoots, webRoot, classPath, jdkName,
+                    new OunceCoreProject( projectName, ppfFile.getParent(), sourceRoots, webRoot, classPath, jdkName,
                                           packaging, optionsStr, options );
-                log.debug("OunceCoreXmlSerializer: projectRoot " +projectRoot); 
+                log.debug("OunceCoreXmlSerializer: projectRoot " + ppfFile.getParent()); 
                 return project;
             }
             else
@@ -880,16 +816,12 @@ public class OunceCoreXmlSerializer
 
         String command;
         if ( installDir == null )
-        {
-            // just assume it's on the path
-            command = "ounceauto";
-        }
+            command = "ounceauto"; // just assume it's on the path
         else
-        {
             command = installDir + File.separator + "bin" + File.separator + "ounceauto";
-            log.info("Command: " + command);
-        }
 
+        log.debug("ounceauto command: " + command);
+        
         String existingAssessment = null;
         int includeSrcBefore = -1;
         int includeSrcAfter = -1;
@@ -1029,14 +961,9 @@ public class OunceCoreXmlSerializer
     {
         String command;
         if ( installDir == null )
-        {
-            // just assume it's on the path
-            command = "ounceauto";
-        }
+            command = "ounceauto"; // just assume it's on the path
         else
-        {
             command = installDir + File.separator + "bin" + File.separator + "ounceauto";
-        }
 
         try
         {
@@ -1063,10 +990,8 @@ public class OunceCoreXmlSerializer
         }
     }
 
-    private int executeCommand( String command, Log log )
-        throws IOException, InterruptedException
+    private int executeCommand( String command, Log log ) throws IOException, InterruptedException
     {
-    	//final String OS = "Mac OS X";
     	final String OS ="Windows";
     	String opSys = System.getProperty("os.name");
     	Process p = null;

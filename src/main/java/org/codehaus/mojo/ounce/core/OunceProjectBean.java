@@ -30,8 +30,6 @@ import org.codehaus.plexus.util.StringUtils;
 
 /**
  * This is a bean to hold the path and name of the project.
- * 
- * @author <a href="mailto:brianf@apache.org">Brian Fox</a>
  */
 
 public class OunceProjectBean

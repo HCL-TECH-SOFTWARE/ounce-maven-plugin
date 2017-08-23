@@ -86,7 +86,7 @@ public class OunceCoreMock
     public void createProject( String theBaseDir, String name, String jspCompilerInfoName, String jspCompilerType, String projectRoot, List sourceRoots, String webRoot,
                                String classPath, String jdkName, String compilerOptions, String packaging,
                                Map ounceOptions, boolean forceWeb, boolean analyzeStrutsFramework, boolean importStrutsValidation,
-                               String projectDir, String[] srcRoot, Log theLog )
+                               String projectDir, Log theLog )
         throws OunceCoreException
     {
         project =

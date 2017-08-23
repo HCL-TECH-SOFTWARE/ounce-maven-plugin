@@ -80,7 +80,7 @@ public abstract class AbstractOunceMojo
      * 
      * @parameter
      */
-    Map pathVariableMap;
+    protected Map<String, String> pathVariableMap;
 
     /**
      * The name of the project set in the pom.
