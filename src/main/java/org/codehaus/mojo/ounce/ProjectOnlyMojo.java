@@ -257,8 +257,10 @@ public class ProjectOnlyMojo extends AbstractOunceMojo
     		File classesDir = new File(project.getBuild().getOutputDirectory());
     		
     		//Make sure the directory contains .class files
-    		if(!Utils.getFilesOfType(classesDir, ".class").isEmpty())
-    			options.put("precompiled", Utils.makeRelative(classesDir.getAbsolutePath(), projectDir));
+    		if(!Utils.getFilesOfType(classesDir, ".class").isEmpty()) {
+    			String precompiledDir = Utils.makeRelative(classesDir.getAbsolutePath(), projectDir);
+    			options.put("precompiled", precompiledDir.replace('\\',  '/'));
+    		}
     		else
     			options.put("precompiled", "");
     	}
