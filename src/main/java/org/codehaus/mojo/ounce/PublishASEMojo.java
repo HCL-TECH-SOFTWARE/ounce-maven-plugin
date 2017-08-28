@@ -1,3 +1,9 @@
+/**
+ * (c) Copyright IBM Corporation 2016.
+ * (c) Copyright HCL Technologies Ltd. 2017. 
+ * LICENSE: Apache License, Version 2.0 https://www.apache.org/licenses/LICENSE-2.0
+ */
+
 package org.codehaus.mojo.ounce;
 
 import org.apache.maven.plugin.MojoExecutionException;
