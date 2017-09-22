@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2007, Ounce Labs, Inc.
  * All rights reserved.
+ * (c) Copyright HCL Technologies Ltd. 2017. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -95,8 +96,7 @@ public class OunceCoreXml
     public void createProject( String baseDir, String theName, String jspCompilerInfoName, String jspCompilerType, String theProjectRoot, List theSourceRoots,
                                String theWebRoot, String theClassPath, String theJdkName, String theCompilerOptions,
                                String packaging, Map ounceOptions, boolean forceWeb,
-                               boolean analyzeStrutsFramework, boolean importStrutsValidation, String projectDir,
-                               String[] srcRoot, Log log )
+                               boolean analyzeStrutsFramework, boolean importStrutsValidation, String projectDir, Log log )
         throws OunceCoreException
     {
         if ( StringUtils.isNotEmpty( theClassPath ) )

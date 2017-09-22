@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2007, Ounce Labs, Inc.
  * All rights reserved.
+ * (c) Copyright HCL Technologies Ltd. 2017. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,20 +28,16 @@
 package org.codehaus.mojo.ounce;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugin.logging.Log;
-import org.codehaus.mojo.ounce.core.OunceCore;
 import org.codehaus.mojo.ounce.core.OunceCoreException;
 import org.codehaus.mojo.ounce.utils.Utils;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
@@ -55,8 +52,7 @@ import org.codehaus.plexus.component.repository.exception.ComponentLookupExcepti
  * @goal project-only
  * @phase package
  */
-public class ProjectOnlyMojo
-    extends AbstractOunceMojo
+public class ProjectOnlyMojo extends AbstractOunceMojo
 {
     public static final String M2_REPO = "M2_REPO";
 
@@ -122,6 +118,14 @@ public class ProjectOnlyMojo
     protected boolean includeTestSources;
 
     /**
+     * The directory where the webapp is built for war
+     * projects.
+     * 
+     * @parameter expression="${project.build.directory}/${project.build.finalName}"
+     */
+    private String webappDirectory;
+    
+    /**
      * Whether the plugin should use the Ounce Automation Server to create any necessary variables (such as M2_REPO).
      * Requires that the Ounce Automation Server be installed.
      * 
@@ -142,14 +146,7 @@ public class ProjectOnlyMojo
      * 
      * @parameter expression="${ounce.installDir}"
      */
-    String installDir;
-
-    /**
-     * The location of the web context root, if needed.
-     * 
-     * @parameter expression="${ounce.webappDir}" default-value="${basedir}/src/main/webapp"
-     */
-    private String webappDirectory;
+    private String installDir;
     
     /**
      * Whether to analyze the framework for a Struts application
@@ -173,24 +170,10 @@ public class ProjectOnlyMojo
      * @required
      */
     protected ArtifactRepository local;
-    
-    /**
-     * Specifies the location to create the ppf file
-     * 
-     * @parameter expression="${ounce.projectFile}" default-value="${basedir}/${project.artifactId}.ppf"
-     */
-    private String projectFile;
-    
-    /**
-     * Specifies the location of the source root
-     * 
-     * @parameter expression="${ounce.srcRoots}"
-     */
-    private String[] srcRoots;
-    
+
     /**
      * 
-     * @parameter expression="${ounce.preCompileScan}" default-value="false"
+     * @parameter expression="${ounce.precompileScan}" default-value="false"
      * 
      */
     private boolean precompileScan;
@@ -225,78 +208,18 @@ public class ProjectOnlyMojo
      * 
      * @see org.apache.maven.plugin.Mojo#execute()
      */
-    public void execute()
-        throws MojoExecutionException, MojoFailureException
+    public void execute() throws MojoExecutionException, MojoFailureException
     {
-    	Log log = getLog();
         if ( project.getPackaging() != "pom" || !skipPoms )
         {
             try
             {
-            	List sourceRoots = null;
-            	String projectRoot = getProjectRoot();
-            	
-                if(srcRoots.length > 0 && !precompileScan)
-                {
-                	sourceRoots = new ArrayList();
-                	for(int index = 0; index < srcRoots.length;index++)
-                	{
-                		sourceRoots.add(srcRoots[index]);
-                	}
+            	if(createVariables)
+            		configureVariables();
 
-                }
-                if(precompileScan)
-                {
-                	sourceRoots.add("${project.build.sourceDirectory}");
-                }
-                else
-                {
-                	sourceRoots = getSourceRoots();
-                }
-                sourceRoots = Utils.convertToRelativePaths( sourceRoots, projectDir, "" );
-                
-                // TODO: Validate projectDir is an absolute path.  If not, make absolute.
-                
-                // projectDir == projectRoot unless -Dounce.projectDir specified by the user.
-                projectFile = projectDir + File.separator + name + ".ppf";
-               	log.debug("ProjectOnlyMojo: Creating project file " + projectFile + " from projectDir");
-
-               	// TODO: Add checks.  1. Does the webappDirectory exist?  2. Does it contain web files?
-               	
-                // make webappDirectoy path relative to projectDir
-                File wcr = new File(webappDirectory);
-                if(Utils.isConvertible(webappDirectory, projectDir))
-                {
-                	webappDirectory = Utils.makeRelative(wcr.getAbsolutePath(), projectDir);
-                }
-                else
-                {
-                	webappDirectory = wcr.getAbsolutePath();
-                }
-
-                if ( createVariables )
-                {
-                    if ( pathVariableMap == null )
-                    {
-                        pathVariableMap = new HashMap();
-                    }
-                    if ( pathVariableMap.get( ProjectOnlyMojo.M2_REPO ) == null )
-                    {
-                        pathVariableMap.put( ProjectOnlyMojo.M2_REPO, local.getBasedir() );
-                    }
-                }
-
-                String classPath = buildClasspath();
-
-                OunceCore core = getCore();
-                core.createProject( getProjectRoot(), name, jspCompilerName, jspCompilerType, projectRoot, sourceRoots, webappDirectory, classPath,
-                                    jdkName, javaCompilerOptions, project.getPackaging(), this.options, 
-                                    forceWeb, analyzeStrutsFramework, importStrutsValidation, projectFile, srcRoots, this.getLog() );
-
-                if ( createVariables )
-                {
-                    core.createPathVariables( pathVariableMap, installDir, this.getLog() );
-                }
+               getCore().createProject( getProjectRoot(), name, jspCompilerName, jspCompilerType, getProjectRoot(), getSourceRoots(), getWebRoot(), getClasspath(),
+                                    jdkName, javaCompilerOptions, project.getPackaging(), getOptions(), 
+                                    forceWeb, analyzeStrutsFramework, importStrutsValidation, projectDir, this.getLog() );
             }
             catch ( ComponentLookupException e )
             {
@@ -314,20 +237,36 @@ public class ProjectOnlyMojo
     }
 
     /**
-     * This method gets the source roots from the project. Overrides the ProjectOnly:getSourceRoots() method because we
-     * don't have an executed project because the build wasn't forked.
+     * This method gets the source roots from the project.
      * 
      * @return List of source roots.
      */
-    protected List getSourceRoots()
+    protected List<String> getSourceRoots()
     {
-        List sourceRoots = project.getCompileSourceRoots();
-
-        if ( this.includeTestSources )
-        {
-            sourceRoots.addAll( project.getTestCompileSourceRoots() );
-        }
-        return sourceRoots;
+		List<String> sourceRoots = project.getCompileSourceRoots();
+        if (includeTestSources)
+            sourceRoots.addAll(project.getTestCompileSourceRoots());
+        
+        return Utils.convertToRelativePaths(sourceRoots, projectDir);
+    }
+    
+    protected Map<String, String> getOptions() {
+    	if(options == null)
+    		options = new HashMap<String, String>();
+    	
+    	if(precompileScan && new File(project.getBuild().getOutputDirectory()).isDirectory()) {
+    		File classesDir = new File(project.getBuild().getOutputDirectory());
+    		
+    		//Make sure the directory contains .class files
+    		if(!Utils.getFilesOfType(classesDir, ".class").isEmpty()) {
+    			String precompiledDir = Utils.makeRelative(classesDir.getAbsolutePath(), projectDir);
+    			options.put("precompiled", precompiledDir.replace('\\',  '/'));
+    		}
+    		else
+    			options.put("precompiled", "");
+    	}
+    		
+    	return options;
     }
 
     /**
@@ -336,8 +275,7 @@ public class ProjectOnlyMojo
      * @return
      * @throws MojoExecutionException
      */
-    protected String buildClasspath()
-        throws MojoExecutionException
+    protected String getClasspath() throws MojoExecutionException
     {
         List classpathElements = getClasspathElements();
 
@@ -359,12 +297,11 @@ public class ProjectOnlyMojo
                 this.getLog().debug("ProjectOnlyMojo|buildClasspath: " + cpe2 + " converted: " + converted_cpe2);
             }
         }
-        // add extrenalJars to the end of the Classpath
-        // TODO: Verify absolute path is acceptable.  If not split and make relative.
-        String externalJars = getExternalJars();
-        if(StringUtils.isNotEmpty(externalJars)) {
-           sb.append("," + externalJars);
-        }
+        // Add extrenalJars to the end of the Classpath.
+        // This is a comma separated list that needs to be converted to relative paths.
+        for(String jar : getExternalJars().split(","))
+        	sb.append(File.pathSeparator + Utils.makeRelative(jar,  projectDir));
+
         return sb.toString();
     }
 
@@ -414,6 +351,26 @@ public class ProjectOnlyMojo
         return classpathElements;
     }
 
+    /**
+     * Gets the path to the generated webapp directory for war projects.
+     * 
+     * @return The path to the generated webapp directory or the empty string if this project is not a war project.
+     */
+    protected String getWebRoot() {
+    	if(!project.getPackaging().equalsIgnoreCase("war"))
+    		return "";
+    	
+    	return Utils.makeRelative(webappDirectory, projectDir);
+    }
+	
+	private void configureVariables() throws OunceCoreException, ComponentLookupException {
+        if ( pathVariableMap == null )
+            pathVariableMap = new HashMap();
+        
+        pathVariableMap.put(M2_REPO, local.getBasedir());
+        getCore().createPathVariables(pathVariableMap, installDir, this.getLog());
+	}
+    
     /**
      * @return the classpathScope
      */
@@ -477,22 +434,6 @@ public class ProjectOnlyMojo
     {
         this.javaCompilerOptions = theJavaCompilerOptions;
     }
-
-    /**
-     * @return the webappDirectory
-     */
-    protected String getWebappDirectory()
-    {
-        return this.webappDirectory;
-    }
-
-    /**
-     * @param theWebappDirectory the webappDirectory to set
-     */
-    protected void setWebappDirectory( String theWebappDirectory )
-    {
-        this.webappDirectory = theWebappDirectory;
-    }
     
     /**
      * @return whether to analyze Struts framework
@@ -538,22 +479,6 @@ public class ProjectOnlyMojo
         this.local = theLocal;
     }
 
-	public String getProjectFile() {
-		return projectFile;
-	}
-
-	public void setProjectFile(String projectFile) {
-		this.projectFile = projectFile;
-	}
-
-	public String[] getSrcRoots() {
-		return srcRoots;
-	}
-
-	public void setSrcRoots(String[] srcRoots) {
-		this.srcRoots = srcRoots;
-	}
-
 	public boolean isPrecompileScan() {
 		return precompileScan;
 	}
@@ -570,6 +495,12 @@ public class ProjectOnlyMojo
 		this.externalJars = externalJars;
 	}
     
+    public boolean getPrecompileScan() {
+    	return precompileScan;
+    }
     
+    public String getProjectDir() {
+    	return projectDir;
+    }
 
 }

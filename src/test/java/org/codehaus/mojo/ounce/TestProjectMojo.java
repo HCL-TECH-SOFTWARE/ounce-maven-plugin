@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2007, Ounce Labs, Inc.
  * All rights reserved.
+ * (c) Copyright HCL Technologies Ltd. 2017. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -81,7 +82,7 @@ public class TestProjectMojo
         mojo.setProject( getProject() );
         mojo.setClasspathScope( Artifact.SCOPE_SYSTEM );
 
-        String classpath = mojo.buildClasspath();
+        String classpath = mojo.getClasspath();
 
         String expectedResult = "/repo/test.jar" + File.pathSeparator + "/repo/test2.jar";
         assertEquals( expectedResult, classpath );

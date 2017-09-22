@@ -719,6 +719,9 @@ $mvn ounce:help -Ddetail=true
 <b>Generate application and project files</b><br>
 $mvn clean install ounce:application ounce:project
 
+<b>Generate application and project files in AppScanSource specific folder outside the project root</b><br>
+$mvn clean install -Dounce.appName=MyApp -Dounce.appDir=C:\Code\MyApp\AppScanSource\Application -Dounce.projectDir=C:\Code\MyApp\AppScanSource ounce:application ounce:project
+
 # License
 
 All files found in this project are licensed under the [Apache License 2.0](LICENSE).

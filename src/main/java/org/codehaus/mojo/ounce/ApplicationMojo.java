@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2007, Ounce Labs, Inc.
  * All rights reserved.
+ * (c) Copyright HCL Technologies Ltd. 2017. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -50,11 +51,10 @@ import org.codehaus.plexus.util.StringUtils;
 
 /**
  * This mojo generates an Ounce application file. It will automatically include all child modules as projects. This list
- * make be modified using the includes and excludes patterns. Projects that are external to this build may be included
+ * may be modified using the includes and excludes patterns. Projects that are external to this build may be included
  * directly using the externalProjects list. External Applications may also be included. All of their modules will be
  * inherted as part of this application file. Those projects may also be filtered upon import.
  * 
- * @author <a href="mailto:brianf@apache.org">Brian Fox</a>
  * @aggregator
  * @phase package
  * @goal application
@@ -70,7 +70,7 @@ public class ApplicationMojo
      * @required
      * @readonly
      */
-    private List projects;
+    private List<MavenProject> projects;
 
     /**
      * An array of directories containing the pom file of any projects to include. If an include pattern is specified,
@@ -142,70 +142,29 @@ public class ApplicationMojo
      * 
      * @see org.apache.maven.plugin.Mojo#execute()
      */
-    public void execute()
-        throws MojoExecutionException, MojoFailureException
-    {
-        if ( !isThisTheExecutionRoot() )
-        {
-            return;
-        }
+    public void execute() throws MojoExecutionException, MojoFailureException {
+        if (!isThisTheExecutionRoot())
+           return;
 
-        try
-        {
+        try {
             OunceCore core = getCore();
 
             List coreProjects = getIncludedModules();
             List externs = getExternalProjects();
             
-            
-            if ( externs != null )
-            {
-                if ( coreProjects != null )
-                {
+            if (externs != null) {
+                if (coreProjects != null)
                     coreProjects.addAll( externs );
-                }
                 else
-                {
                     coreProjects = externs;
-                }
             }
 
             externs = getIncludedExternalApplicationProjects( core );
-            if ( externs != null )
-            {
+            if (externs != null)
                 coreProjects.addAll( externs );
-            }
 
-            // perform variable substitution
-            Iterator it = coreProjects.iterator();
-            while ( it.hasNext() )
-            {
-                OunceProjectBean projectBean = (OunceProjectBean) it.next();
-                
-                if(!projectDir.isEmpty())
-                {
-                	//PathConverter
-                	//projectBean.setPath( Utils.convertToVariablePath( projectDir, pathVariableMap ) );
-                	
-                	projectBean.setPath( Utils.convertToVariablePath( projectDir, pathVariableMap ) );
-                	//projectBean.setPath( projectDir );
-                	//System.out.println("Setting Path from App Mojo");
-                	this.getLog().debug("AppMojo: projectRoot: " + getProjectRoot());
-                	//projectBean.setPath( getProjectRoot() );
-                	this.getLog().debug("AppMojo: projectBean Path: " + projectBean.getPath());
-                }
-                else
-                {
-                	projectBean.setPath( Utils.convertToVariablePath( projectBean.getPath(), pathVariableMap ) );
-                }
-                
-                //projectBean.setPath( Utils.convertToVariablePath( projectBean.getPath(), pathVariableMap ) );
-                //getLog().info("App MOJO line 182, project path: "+ projectBean.getPath());
-            }
-            
             getLog().debug("AppMojo: Application directory is " + appDir);
-
-            core.createApplication( appDir, appName, ".", coreProjects, options ,getLog() );
+            core.createApplication(appDir, appName, appDir, coreProjects, options , getLog());
         }
         catch ( ComponentLookupException e )
         {
@@ -220,7 +179,7 @@ public class ApplicationMojo
             throw new MojoExecutionException( "Nested IOexception: " + e.getLocalizedMessage(), e );
         }
 
-    }// end of execute method
+    }
 
     /**
      * This method filters the projects.
@@ -231,8 +190,7 @@ public class ApplicationMojo
      * @return
      * @throws IOException
      */
-    private List getSelectedModules( List theProjects, String[] includes, String[] excludes )
-        throws IOException
+    private List getSelectedModules( List theProjects, String[] includes, String[] excludes ) throws IOException
     {
         IncludeExcludeFileSelector selector = new IncludeExcludeFileSelector();
 
@@ -249,30 +207,22 @@ public class ApplicationMojo
         List coreProjects = new ArrayList( theProjects.size() );
 
         Iterator iter = theProjects.iterator();
-        while ( iter.hasNext() )
-        {
+        while ( iter.hasNext() ) {
             MavenProject prj = (MavenProject) iter.next();
             
             File prjt = null;
             
             if(!projectDir.isEmpty())
-            {
-            	//prjt = new File(projectDir);
             	prjt = new File(getProjectRoot());
-            }
-            else
-            {
+            else {
             	prjt = prj.getBasedir();
-            	this.getLog().debug("AppMojo: else");
-            	//prjt = prj.
+            	getLog().debug("AppMojo: else");
             }
             
             getLog().debug("AppMojo: Project Directory: " + prjt);
 
             if ( selector.isSelected( new ProjectFileInfo( prjt ) ) || prj == project )
-            {
                 coreProjects.add( prj );
-            }
         }
         return coreProjects;
     }
@@ -284,34 +234,24 @@ public class ApplicationMojo
      * @return List of OunceProjectBeans representing each module
      * @throws IOException
      */
-    protected List getIncludedModules()
-        throws IOException
+    protected List getIncludedModules() throws IOException
     {
-
         /*
          * first we need to prefilter the reactor projects list. instead of including only the current project's
          * children, it includes everything we need to build a prefilter based on the current project's path and only
          * include projects with a matching path.
          */
-        File baseDir = project.getBasedir();
         String[] preFilterIncludes = new String[1];
-        preFilterIncludes[0] = "**/" + baseDir.getParentFile().getName() + "/**";
+        preFilterIncludes[0] = "**/" + project.getBasedir().getParentFile().getName() + "/**";
         List preFilteredProjects = getSelectedModules( projects, preFilterIncludes, null );
 
         // now do the normal filtering
         List includedProjects = getSelectedModules( preFilteredProjects, includes, excludes );
 		includedProjects = getSelectedModules( projects, includes, excludes );
 		
-		Iterator iter = includedProjects.iterator();
-		while(iter.hasNext()) {
-			MavenProject prj = (MavenProject) iter.next();
-			this.getLog().debug("AppMojo: baseDir: "+ prj.getBasedir());
-		}
-		
         // now make them beans
         return convertToBeans( includedProjects );
-
-    }// end of method getIncludedModules
+    }
 
     /**
      * Converts a list of Maven Projects to OunceProjectBeans
@@ -319,35 +259,23 @@ public class ApplicationMojo
      * @param theProjects
      * @return
      */
-    private List<OunceProjectBean> convertToBeans( List<OunceProjectBean> theProjects )
+    private List<OunceProjectBean> convertToBeans(List<OunceProjectBean> theProjects)
     {
-        List<OunceProjectBean> beanProjects = new ArrayList<OunceProjectBean>( theProjects.size() );
+        List<OunceProjectBean> beanProjects = new ArrayList<OunceProjectBean>(theProjects.size());
 
         Iterator iter = theProjects.iterator();
-        while ( iter.hasNext() )
-        {
+        while (iter.hasNext()) {
             MavenProject prj = (MavenProject) iter.next();
 
-            if ( !skipPoms || !prj.getPackaging().equalsIgnoreCase( "pom" ) )
-            {
-                String path = prj.getBasedir().getAbsolutePath();
-                this.getLog().debug("AppMojo: path before conv: " + path);
-
-				//path = Utils.convertToRelativePath( path, getProjectRoot(), "" );
-				//path = Utils.PathConverter(path, getProjectRoot());
-				
-                this.getLog().debug("AppMojo: path: " + path);
-				beanProjects.add( new OunceProjectBean( path, prj.getArtifactId() ) );
+            if (!skipPoms || !prj.getPackaging().equalsIgnoreCase("pom")) {
+				beanProjects.add( new OunceProjectBean(projectDir, prj.getArtifactId()));
             }
-
             else
-            {
-                this.getLog().debug( "Skipping Pom: " + prj.getArtifactId() );
-            }
+                getLog().debug( "Skipping Pom: " + prj.getArtifactId() );
         }
 
         return beanProjects;
-    }// end of method convertToBeans
+    }
 
     /**
      * Get the list of user defined external projects
@@ -355,37 +283,26 @@ public class ApplicationMojo
      * @return List of external Projects
      * @throws MojoExecutionException if the format is invalid
      */
-    protected List getExternalProjects()
-        throws MojoExecutionException
-    {
+    protected List getExternalProjects() throws MojoExecutionException {
         List externals = null;
 
-        if ( externalProjects != null && externalProjects.size() > 0 )
-        {
-
-            // init the array
+        if ( externalProjects != null && externalProjects.size() > 0 ) {
             externals = new ArrayList( externalProjects.size() );
 
             // add each one
             Iterator iter = externalProjects.iterator();
-            while ( iter.hasNext() )
-            {
+            while ( iter.hasNext() ) {
                 // break the project into name:path
                 String extern = (String) iter.next();
                 String[] prj = extern.split( "," );
                 if ( prj.length == 2 )
-                {
                     externals.add( new OunceProjectBean( prj[1], prj[0] ) );
-                }
-                else
-                {
-                    // they didn't follow the format
+                else // they didn't follow the format
                     throw new MojoExecutionException( "Invalid External Project String: " + extern );
-                }
             }
         }
         return externals;
-    }// end of method getExternalProjects
+    }
 
     /**
      * Get the list of user defined external application files to process
@@ -393,51 +310,35 @@ public class ApplicationMojo
      * @return List of external Applications
      * @throws MojoExecutionException if the format is invalid
      */
-    protected List getExternalApplications()
-        throws MojoExecutionException
-    {
+    protected List getExternalApplications() throws MojoExecutionException {
         List externals = null;
 
-        if ( externalApplications != null && externalApplications.size() > 0 )
-        {
-
-            // init the array
+        if ( externalApplications != null && externalApplications.size() > 0 ) {
             externals = new ArrayList( externalApplications.size() );
 
             // add each one
             Iterator iter = externalApplications.iterator();
-            while ( iter.hasNext() )
-            {
+            while ( iter.hasNext() ) {
                 // break the project into
                 // path,includes,excludes
                 String extern = (String) iter.next();
                 String[] prj = extern.split( "," );
 
                 if ( prj.length == 3 )
-                {
                     externals.add( new ExternalApplication( prj[0], prj[1], prj[2] ) );
-                }
                 else if ( prj.length == 2 )
-                {
                     externals.add( new ExternalApplication( prj[0], prj[1], null ) );
-                }
                 else if ( prj.length == 1 )
-                {
                     externals.add( new ExternalApplication( prj[0], null, null ) );
-                }
-                else
-                {
-                    // they didn't follow the format
+                else // they didn't follow the format
                     throw new MojoExecutionException( "Invalid External Application String: " + extern );
-                }
             }
         }
         else
-        {
             externals = new ArrayList();
-        }
+
         return externals;
-    } // end of method getExternalApplications
+    }
 
     /**
      * This method processes the external Applications and filters them according to the include/exclude patterns
@@ -447,10 +348,7 @@ public class ApplicationMojo
      * @throws OunceCoreException
      * @throws IOException
      */
-    public List getIncludedExternalApplicationProjects( OunceCore core )
-        throws MojoExecutionException, OunceCoreException, IOException
-    {
-
+    public List getIncludedExternalApplicationProjects( OunceCore core ) throws MojoExecutionException, OunceCoreException, IOException {
         List externalApps = getExternalApplications();
 
         // init results
@@ -458,8 +356,7 @@ public class ApplicationMojo
 
         Iterator iter = externalApps.iterator();
 
-        while ( iter.hasNext() )
-        {
+        while ( iter.hasNext() ) {
             ExternalApplication extern = (ExternalApplication) iter.next();
 
             // read the projects from the application ->
@@ -480,10 +377,9 @@ public class ApplicationMojo
      * @return
      * @throws IOException
      */
-    public List filterExternalApplicationProjects( OunceCoreApplication app, ExternalApplication extern )
-        throws IOException
-    {
+    public List filterExternalApplicationProjects( OunceCoreApplication app, ExternalApplication extern ) throws IOException {
         List results = new ArrayList();
+        
         if ( app != null && app.getProjects() != null )
         {
             IncludeExcludeFileSelector fileSelector = new IncludeExcludeFileSelector();
@@ -493,23 +389,16 @@ public class ApplicationMojo
 
             // init scanner with inc/exc
             if ( StringUtils.isNotEmpty( excludeString ) )
-            {
-                // split on |
-                fileSelector.setExcludes( excludeString.split( "\\x7C" ) );
-            }
+                fileSelector.setExcludes( excludeString.split( "\\x7C" ) ); // split on |
 
             if ( StringUtils.isNotEmpty( includeString ) )
-            {
-                // split on |
-                fileSelector.setIncludes( includeString.split( "\\x7C" ) );
-            }
+                fileSelector.setIncludes( includeString.split( "\\x7C" ) ); // split on |
 
-            for ( Iterator pIter = app.getProjects().iterator(); pIter.hasNext(); )
-            {
+            for ( Iterator pIter = app.getProjects().iterator(); pIter.hasNext(); ) {
                 OunceProjectBean prj = (OunceProjectBean) pIter.next();
                 getLog().debug( "Filtering External App Project: " + prj );
-                if ( fileSelector.isSelected( new ProjectFileInfo( new File( prj.getPath() ) ) ) )
-                {
+                
+                if ( fileSelector.isSelected( new ProjectFileInfo( new File( prj.getPath() ) ) ) ) {
                     String path = extern.getPath() + File.separator + prj.getPath();
                     path = Utils.convertToVariablePath( path, pathVariableMap );
                     getLog().debug("AppMojo: Path after conversion: " + path);

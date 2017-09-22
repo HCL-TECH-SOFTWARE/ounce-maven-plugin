@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2007, Ounce Labs, Inc.
  * All rights reserved.
+ * (c) Copyright HCL Technologies Ltd. 2017. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -29,6 +30,7 @@ package org.codehaus.mojo.ounce;
 import java.util.List;
 
 import org.apache.maven.project.MavenProject;
+import org.codehaus.mojo.ounce.utils.Utils;
 
 /**
  * This mojo generates an Ounce project file. It forks the build and executes the process-sources phase so that any
@@ -41,9 +43,7 @@ import org.apache.maven.project.MavenProject;
  * @goal project
  * @execute phase="process-sources"
  */
-public class ProjectMojo
-    extends ProjectOnlyMojo
-{
+public class ProjectMojo extends ProjectOnlyMojo {
 
     /**
      * The project executed when forked.
@@ -60,13 +60,11 @@ public class ProjectMojo
      */
     protected List getSourceRoots()
     {
-        List sourceRoots = executedProject.getCompileSourceRoots();
-
-        if ( this.includeTestSources )
-        {
-            sourceRoots.addAll( executedProject.getTestCompileSourceRoots() );
-        }
-        return sourceRoots;
+    	List<String> sourceRoots = executedProject.getCompileSourceRoots();
+        if (includeTestSources)
+            sourceRoots.addAll(executedProject.getTestCompileSourceRoots());
+        
+        return Utils.convertToRelativePaths(sourceRoots, getProjectDir());
     }
 
     /**

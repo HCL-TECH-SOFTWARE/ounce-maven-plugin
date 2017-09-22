@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2007, Ounce Labs, Inc.
  * All rights reserved.
+ * (c) Copyright HCL Technologies Ltd. 2017. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -80,7 +81,7 @@ public abstract class AbstractOunceMojo
      * 
      * @parameter
      */
-    Map pathVariableMap;
+    protected Map<String, String> pathVariableMap;
 
     /**
      * The name of the project set in the pom.

@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2007, Ounce Labs, Inc.
  * All rights reserved.
+ * (c) Copyright HCL Technologies Ltd. 2017. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,8 +28,10 @@
 package org.codehaus.mojo.ounce.utils;
 
 import java.io.File;
-import java.nio.file.*;
+import java.io.IOException;
 import java.lang.reflect.Field;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -37,23 +40,17 @@ import java.util.Map.Entry;
 
 import org.codehaus.plexus.util.StringUtils;
 
-/**
- * @author <a href="mailto:brianf@apache.org">Brian Fox</a>
- */
 public class Utils
 {
     static final String propertyFormat = "%**%";
 
     public static String convertClasspathElement(String classpathElement, String ounceProjectDir, Map ounceVariableMap )
     {
-    	String classpathelementWithVariableReplacement = convertToVariablePath(classpathElement, ounceVariableMap);
-    	if(classpathelementWithVariableReplacement.equals(classpathElement)) {
-			if(new File(classpathElement).isAbsolute()) {
-				classpathElement = makeRelative(classpathElement, ounceProjectDir);
-			}
-    		return classpathElement;
-    	}
-        return classpathelementWithVariableReplacement;
+    	String ret = convertToVariablePath(classpathElement, ounceVariableMap);
+    	if(ret.equals(classpathElement) && ounceProjectDir != null)
+			ret = makeRelative(classpathElement, ounceProjectDir);
+
+        return ret;
     }
 
     /**
@@ -75,56 +72,20 @@ public class Utils
     }
 
     /**
-     * Performs the path/key substitution for all paths.
-     * 
-     * @param paths
-     * @param pathVariableMap map of key/path pairs to replace
-     * @return processed list
-     */
-    static public List convertToPropertyPaths( List paths, Map pathProperties )
-    {
-        List result = paths;
-        if ( pathProperties != null && pathProperties.size() > 0 )
-        {
-            for ( Iterator iter = pathProperties.entrySet().iterator(); iter.hasNext(); )
-            {
-                Entry entry = (Entry) iter.next();
-                result = convertToRelativePaths( result, (String) entry.getValue(), (String) entry.getKey() );
-            }
-        }
-        return result;
-    }
-
-    /**
-     * Removes the pathToRemove from the paths and optionally replaces it with a key
+     * Converts the given List of paths to relative paths using baseDir as the base directory.
      * 
      * @param paths original paths in a list
-     * @param pathToRemove string to replace
-     * @param key string to replace with
-     * @return normalized string beginning with the key
+     * @param baseDir The directory to use as the base of the relative paths.
+	 *
+     * @return A List of relative paths
      */
-    static public List convertToRelativePaths( List paths, String pathToRemove, String key )
+    static public List<String> convertToRelativePaths(List<String> paths, String baseDir)
     {
-        // go through the list, replace remove the
-        // strings
-        List newPaths = new ArrayList( paths.size() );
-        Iterator iter = paths.iterator();
-
-        while ( iter.hasNext() )
-        {
-        	String next = (String)iter.next();
-            //newPaths.add( convertToRelativePath( (String) iter.next(), pathToRemove, key ) );
-        	
-        	if(isConvertible(next, pathToRemove))
-        	{
-        		newPaths.add(makeRelative(next, pathToRemove));
-        	}
-        	else
-        	{
-        		newPaths.add(next);
-        	}
-        }
-        return newPaths;
+        ArrayList<String> relativePaths = new ArrayList<String>();
+        for(String path : paths)
+        	relativePaths.add(makeRelative(path, baseDir));
+        
+        return relativePaths;
     }
 
     /**
@@ -170,13 +131,6 @@ public class Utils
 	
 	public static boolean isConvertible(String childPath,String parentPath)
 	{
-		/*File child = new File(childPath.trim());
-		File parent = new File(parentPath.trim());*/
-		
-		
-		/*String[] childPathElements = child.toString().split(File.separator);
-		String[] parentPathElements = parent.toString().split(File.separator);*/
-		
 		String[] childPathElements = childPath.replaceAll("\\\\", "/").split("/");
 		String[] parentPathElements = parentPath.replaceAll("\\\\", "/").split("/");
 		
@@ -187,10 +141,7 @@ public class Utils
 		{
 			limit = childPathElements.length;
 		}
-		
-		//System.out.println("loop limit " + limit);
-		//System.out.println("number of child elements: " + childPathElements.length);
-		
+
 		for(int index = 0; index < limit; index++)
 		{
 			
@@ -213,17 +164,25 @@ public class Utils
 			}
 		}
 		return true;
-	}// end of method isConvertible
+	}
 	
 	public static String makeRelative(String sPathToBeMadeRelative, String sReferenceDir)
 	{
-		// TODO: Check parameters
+		//Ensure absolute paths.
+		try {
+			File dir = new File(sReferenceDir);
+			sReferenceDir = dir.getCanonicalPath();
+			dir = new File(sPathToBeMadeRelative);
+			sPathToBeMadeRelative = dir.getCanonicalPath();
+		} catch (IOException e) {
+			return sPathToBeMadeRelative;
+		}
 		
 		Path pathToBeMadeRelative = Paths.get(sPathToBeMadeRelative);
 		Path referenceDir = Paths.get(sReferenceDir);
 		Path relativePath = referenceDir.relativize(pathToBeMadeRelative);
-
 		String sRelativePath = relativePath.toString();
+
 		// Paths are the same.
 		if(sRelativePath.length() == 0) {
 			return ".";
@@ -236,20 +195,23 @@ public class Utils
 		return sRelativePath;
 	}
 	
-	public static void main(String[] args) {
-		Path p1 = Paths.get("/home/smatthiesen/Code/WebGoat-develop");
-		Path p2 = Paths.get("/home/smatthiesen/Scan/AppScanSource/Projects");
-		Path p3 = Paths.get("/home/smatthiesen/Code/WebGoat-develop/webgoat-container");
-		Path p4 = Paths.get("/home/smatthiesen/Code/WebGoat-develop");
-		
-		Path p1_to_p2 = p1.relativize(p2);
-		Path p1_to_p3 = p1.relativize(p3);
-		Path p1_to_p4 = p1.relativize(p4);
-		Path p3_to_p1 = p3.relativize(p1);
-		
-		System.out.println("p1 to p2: " + p1_to_p2.toString());
-		System.out.println("p1 to p3: " + p1_to_p3.toString());
-		System.out.println("p1 to p4: " + p1_to_p4.toString().length());
-		System.out.println("p3 to p1: " + p3_to_p1.toString());
+	/**
+	 * Gets a List of files in the given directory of a specified type. 
+	 * @param directory The directory to search.
+	 * @param extension The file extension to match.
+	 * @return A List<String> of files of the given type or null if the given directory doesn't exist.
+	 */
+	public static List<String> getFilesOfType(File directory, String extension) {
+		List<String> ret = new ArrayList<String>();
+
+		if(directory.isDirectory()) {
+			for(File file : directory.listFiles()) {
+				if(file.isFile() && file.getName().endsWith(extension))
+					ret.add(file.getAbsolutePath());
+				else
+					ret.addAll(getFilesOfType(file, extension));
+			}
+		}
+		return ret;
 	}
 }

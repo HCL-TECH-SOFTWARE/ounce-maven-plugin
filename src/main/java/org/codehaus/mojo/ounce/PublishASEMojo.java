@@ -1,9 +1,14 @@
+/**
+ * (c) Copyright IBM Corporation 2016.
+ * (c) Copyright HCL Technologies Ltd. 2017. 
+ * LICENSE: Apache License, Version 2.0 https://www.apache.org/licenses/LICENSE-2.0
+ */
+
 package org.codehaus.mojo.ounce;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.codehaus.mojo.ounce.core.OunceCore;
-import org.codehaus.mojo.ounce.core.OunceCoreException;
 import org.codehaus.plexus.util.StringUtils;
 
 
@@ -75,7 +80,6 @@ public class PublishASEMojo extends AbstractOunceMojo {
 	boolean waitForScan;
 
 	public void execute() throws MojoExecutionException, MojoFailureException {
-		// TODO Auto-generated method stub
 		if(StringUtils.isEmpty(assessmentOutput))
 		{
 			throw new MojoExecutionException("\'assessmentFile\' must be defined.");

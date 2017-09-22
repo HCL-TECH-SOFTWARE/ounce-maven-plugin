@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2007, Ounce Labs, Inc.
  * All rights reserved.
+ * (c) Copyright HCL Technologies Ltd. 2017. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -109,31 +110,5 @@ public class TestUtils
         assertEquals( "%M2_REPO%/%SOMEPLACE%", Utils.convertToVariablePath( "/repo/someplace", properties ) );
         assertEquals( "/repo/someplace", Utils.convertToVariablePath( "/repo/someplace", null ) );
         assertEquals( "/repo/someplace", Utils.convertToVariablePath( "/repo/someplace", new HashMap() ) );
-
-        List list = new ArrayList( 3 );
-        list.add( "/repo" );
-        list.add( "someplace" );
-        list.add( "/repo/someplace/foo" );
-
-        // check null
-        list = Utils.convertToPropertyPaths( list, null );
-
-        assertTrue( list.contains( "/repo" ) );
-        assertTrue( list.contains( "someplace" ) );
-        assertTrue( list.contains( "/repo/someplace/foo" ) );
-
-        // check empty map
-        list = Utils.convertToPropertyPaths( list, new HashMap() );
-
-        assertTrue( list.contains( "/repo" ) );
-        assertTrue( list.contains( "someplace" ) );
-        assertTrue( list.contains( "/repo/someplace/foo" ) );
-
-        list = Utils.convertToPropertyPaths( list, properties );
-
-        assertTrue( list.contains( "%M2_REPO%" ) );
-        assertTrue( list.contains( "%SOMEPLACE%" ) );
-        assertTrue( list.contains( "%M2_REPO%/%SOMEPLACE%/foo" ) );
-
     }
 }
