@@ -1041,7 +1041,7 @@ public class OunceCoreXmlSerializer implements OunceCore
         return p.waitFor();
     }
 
-	public void publishASE(String assessmentFile, String caller,
+	public void publishASE(String aseApplication, String assessmentFile, String caller,
 			String folderID, String installDir, boolean wait, Log log)
 			throws OunceCoreException {
 		
@@ -1059,9 +1059,14 @@ public class OunceCoreXmlSerializer implements OunceCore
 		{
 			command += " PublishAssessmentASE";
 			
+			if(!StringUtils.isEmpty(aseApplication))
+			{
+				command += String.format(" -aseapplication \"%s\"",aseApplication);
+			}
+			
 			if(!StringUtils.isEmpty(assessmentFile))
 			{
-				command += " -file " + assessmentFile;
+				command += String.format(" -file \"%s\"", assessmentFile);
 			}
 			
 			if(!StringUtils.isEmpty(caller))

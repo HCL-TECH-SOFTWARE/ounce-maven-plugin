@@ -183,11 +183,11 @@ public class OunceCoreMock
 
     }
 
-	public void publishASE(String assessmentFile, String caller,
+	public void publishASE(String aseApplication, String assessmentFile, String caller,
 			String folderID, String installDir, boolean wait, Log log)
 			throws OunceCoreException {
 		
-		publish = new OunceCorePublishASE(assessmentFile, caller, folderID, installDir, wait);
+		publish = new OunceCorePublishASE(aseApplication, assessmentFile, caller, folderID, installDir, wait);
 		
 	}
 }

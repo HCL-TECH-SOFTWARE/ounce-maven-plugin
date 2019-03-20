@@ -147,8 +147,9 @@ public class OunceCoreConsole
         log.info( "Create Path Variables: Method not supported." );
     }
 
-	public void publishASE(String assessmentFile, String caller,
+	public void publishASE(String aseApplication, String assessmentFile, String caller,
 			String folderID,String installDir, boolean wait, Log log) throws OunceCoreException {
+		log.info("ASE Application: " + aseApplication);
 		log.info("Assessment File: " + assessmentFile);
 		log.info("Caller: " + caller);
 		log.info("Folder ID: " + folderID);
