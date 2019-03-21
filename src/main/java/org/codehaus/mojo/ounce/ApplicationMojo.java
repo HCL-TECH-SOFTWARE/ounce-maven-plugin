@@ -268,7 +268,8 @@ public class ApplicationMojo
             MavenProject prj = (MavenProject) iter.next();
 
             if (!skipPoms || !prj.getPackaging().equalsIgnoreCase("pom")) {
-				beanProjects.add( new OunceProjectBean(projectDir, prj.getArtifactId()));
+            	
+				beanProjects.add( new OunceProjectBean(prj.getBasedir().getPath(), prj.getArtifactId()));
             }
             else
                 getLog().debug( "Skipping Pom: " + prj.getArtifactId() );
