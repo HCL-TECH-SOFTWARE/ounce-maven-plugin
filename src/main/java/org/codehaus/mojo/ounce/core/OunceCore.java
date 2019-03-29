@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2007, Ounce Labs, Inc.
  * All rights reserved.
- * (c) Copyright HCL Technologies Ltd. 2017. All rights reserved.
+ * (c) Copyright HCL Technologies Ltd. 2019. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -109,7 +109,20 @@ public interface OunceCore
                boolean includeTraceCoverage, String appserver_type, Log log )
         throws OunceCoreException;
     
-    void publishASE(String aseApplication, String assessmentFile, String caller, String folderID,
+    /**
+     * Publishes the assessment file to the AppScan Enterprise Server.
+     * @param aseApplication Enterprise Console application to associate the assessment with. 
+     * @param nameToPublish Name that the assessment will be saved as in the Enterprise Console. If this argument is empty or null, a name will be
+     * generated based on the AppScan Source application that was scanned to produce the assessment (this name will be prepended with AppScan Source:).
+     * @param assessmentFile Path and file name of the assessment file.
+     * @param caller A name to use for auditing purposes.
+     * @param folderID ID of the target assessment.
+     * @param installDir location of ounce client
+     * @param wait if the client should wait for the scan to complete before returning.
+     * @param log
+     * @throws OunceCoreException
+     */
+    void publishASE(String aseApplication, String nameToPublish, String assessmentFile, String caller, String folderID,
     		String installDir, boolean wait, Log log) throws OunceCoreException;
 
     /**
