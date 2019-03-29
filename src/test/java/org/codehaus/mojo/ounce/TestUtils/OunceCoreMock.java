@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2007, Ounce Labs, Inc.
  * All rights reserved.
- * (c) Copyright HCL Technologies Ltd. 2017. All rights reserved.
+ * (c) Copyright HCL Technologies Ltd. 2019. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -183,11 +183,11 @@ public class OunceCoreMock
 
     }
 
-	public void publishASE(String aseApplication, String assessmentFile, String caller,
+	public void publishASE(String aseApplication, String nameToPublish, String assessmentFile, String caller,
 			String folderID, String installDir, boolean wait, Log log)
 			throws OunceCoreException {
 		
-		publish = new OunceCorePublishASE(aseApplication, assessmentFile, caller, folderID, installDir, wait);
+		publish = new OunceCorePublishASE(aseApplication, nameToPublish, assessmentFile, caller, folderID, installDir, wait);
 		
 	}
 }

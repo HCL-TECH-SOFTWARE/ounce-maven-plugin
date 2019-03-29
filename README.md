@@ -379,6 +379,10 @@ ounce:publishASE<br>
       client is not on the path
       Expression: ${ounce.installDir}
 
+    name
+      This is the name that the assessment will be saved as in the Enterprise Console.
+      Expression: ${ounce.name}
+
     pathVariableMap
       Map of Ounce variable names and paths.
       pathVariableMap variables are automatically registered with Ounce by the

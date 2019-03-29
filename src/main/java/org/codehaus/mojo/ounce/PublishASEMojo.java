@@ -1,6 +1,6 @@
 /**
  * (c) Copyright IBM Corporation 2016.
- * (c) Copyright HCL Technologies Ltd. 2017. 
+ * (c) Copyright HCL Technologies Ltd. 2019. 
  * LICENSE: Apache License, Version 2.0 https://www.apache.org/licenses/LICENSE-2.0
  */
 
@@ -33,6 +33,14 @@ public class PublishASEMojo extends AbstractOunceMojo {
 	 */
 	
 	String aseApplication;
+	
+	/**
+	 * This is the name that the assessment will be saved as in the Enterprise Console.
+	 *
+	 * @parameter expression="${ounce.name}"
+	 */
+	
+	String name;
 	
 	/**
 	 * This is the assessment file that will be published to AppScan Enterprise
@@ -88,7 +96,7 @@ public class PublishASEMojo extends AbstractOunceMojo {
 		try
 		{
 			OunceCore core = getCore();
-			core.publishASE(aseApplication, assessmentOutput, caller, folderID, installDir, waitForScan, getLog());
+			core.publishASE(aseApplication, name, assessmentOutput, caller, folderID, installDir, waitForScan, getLog());
 		}
 		catch(Exception ex)
 		{
