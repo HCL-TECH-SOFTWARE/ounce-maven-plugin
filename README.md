@@ -207,8 +207,15 @@ ounce:project<br>
       pathVariableMap variables are automatically registered with Ounce by the
       Ounce/Maven plugin if the Ounce Automation Server is installed.
 
-    precompileScan (Default: false)
-      (no description available)
+	precompileScan (Default: false)
+      Defaults to false, which means compile the java source files part of scanning 
+	  the project. If set to true, then the compiled class files that were generated 
+	  as part of the build shall be scanned and the java source files shall not be 
+	  compiled again while sanning the project.
+      Note, this option shall not have any effect with JSP files. If the web application 
+	  contains precompiled JSPs, then the tool shall automatically recognize them and 
+	  not recompile the jsps. No additional switch/option is needed. This automatic behavior 
+	  is only present in AppScan Source 9.0.3.7 iFix001 onwards.
       Expression: ${ounce.preCompileScan}
 
     projectDir (Default: ${basedir})
@@ -313,8 +320,15 @@ ounce:project-only<br>
       pathVariableMap variables are automatically registered with Ounce by the
       Ounce/Maven plugin if the Ounce Automation Server is installed.
 
-    precompileScan (Default: false)
-      (no description available)
+	precompileScan (Default: false)
+      Defaults to false, which means compile the java source files part of scanning 
+	  the project. If set to true, then the compiled class files that were generated 
+	  as part of the build shall be scanned and the java source files shall not be 
+	  compiled again while sanning the project.
+      Note, this option shall not have any effect with JSP files. If the web application 
+	  contains precompiled JSPs, then the tool shall automatically recognize them and 
+	  not recompile the jsps. No additional switch/option is needed. This automatic behavior 
+	  is only present in AppScan Source 9.0.3.7 iFix001 onwards.
       Expression: ${ounce.preCompileScan}
 
     projectDir (Default: ${basedir})
