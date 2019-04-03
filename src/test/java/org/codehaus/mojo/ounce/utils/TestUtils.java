@@ -27,6 +27,7 @@
  */
 package org.codehaus.mojo.ounce.utils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -70,7 +71,8 @@ public class TestUtils
 
     public void testFilePathConversion()
     {
-        assertEquals( "./org/apache", Utils.makeRelative( "/repo/org/apache", "/repo") );
+    	assertEquals( "." + File.separator + "org" + File.separator + "apache", Utils.makeRelative( "/repo/org/apache", "/repo") );
+    	
 /* TODO: Switch over to new methods
         assertEquals( "%M2_REPO%/org/apache", Utils.PathConverter( "/repo/org/apache", "/repo", "M2_REPO" ) );
         assertEquals( "%M2_REPO%/org/apache;%M2_REPO%/com", Utils.PathConverter( "/repo/org/apache;/repo/com",
