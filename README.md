@@ -211,7 +211,7 @@ ounce:project<br>
       Defaults to false, which means compile the java source files part of scanning 
 	  the project. If set to true, then the compiled class files that were generated 
 	  as part of the build shall be scanned and the java source files shall not be 
-	  compiled again while sanning the project.
+	  compiled again while scanning the project.
       Note, this option shall not have any effect with JSP files. If the web application 
 	  contains precompiled JSPs, then the tool shall automatically recognize them and 
 	  not recompile the jsps. No additional switch/option is needed. This automatic behavior 
@@ -324,7 +324,7 @@ ounce:project-only<br>
       Defaults to false, which means compile the java source files part of scanning 
 	  the project. If set to true, then the compiled class files that were generated 
 	  as part of the build shall be scanned and the java source files shall not be 
-	  compiled again while sanning the project.
+	  compiled again while scanning the project.
       Note, this option shall not have any effect with JSP files. If the web application 
 	  contains precompiled JSPs, then the tool shall automatically recognize them and 
 	  not recompile the jsps. No additional switch/option is needed. This automatic behavior 
