@@ -38,7 +38,7 @@
 
   <groupId>org.codehaus.mojo</groupId>
   <artifactId>ounce-maven-plugin</artifactId>
-  <version>1.6.0</version>
+  <version>1.6.1-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
   <name>Ounce Maven Plugin</name>
@@ -58,15 +58,15 @@
       	<id>mattmurp</id>
       	<name>Matt Murphy</name>
       	<email>matthew.murphy@hcl.com</email>
-      	<organization>IBM</organization>
-      	<organizationUrl>www.ibm.com/security</organizationUrl>
+      	<organization>HCL</organization>
+      	<organizationUrl>https://www.hcltech.com/</organizationUrl>
     </developer>
   </developers>
 
   <scm>
-    <connection>scm:git:git//github.com/AppSecDev/ounce-maven-plugin.git</connection>
-    <developerConnection>scm:git:ssh//github.com:AppSecDev/ounce-maven-plugin.git</developerConnection>
-    <url>https://github.com/AppSecDev/ounce-maven-plugin</url>
+    <connection>scm:git:git//github.com/hclproducts/ounce-maven-plugin.git</connection>
+    <developerConnection>scm:git:ssh//github.com:hclproducts/ounce-maven-plugin.git</developerConnection>
+    <url>https://github.com/hclproducts/ounce-maven-plugin</url>
   </scm>
 
   <build>
