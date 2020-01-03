@@ -1,4 +1,4 @@
-# IBM AppScan Source Maven Plug-in
+# HCL AppScan Source Maven Plug-in
 
 Easily integrate security testing into your Maven builds using the ounce-maven-plugin and AppScan Source.
 
