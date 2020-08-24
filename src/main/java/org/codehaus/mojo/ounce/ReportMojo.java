@@ -8,6 +8,11 @@ import java.util.ResourceBundle;
 import org.apache.maven.doxia.siterenderer.Renderer;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Component;
+import org.apache.maven.plugins.annotations.Execute;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.reporting.MavenReport;
 import org.apache.maven.reporting.MavenReportException;
@@ -17,10 +22,10 @@ import org.codehaus.doxia.sink.Sink;
  * Generate the scan results as part of the site.
  * 
  * @author <a href="mailto:brianf@apache.org">Brian Fox</a>
- * @goal report
- * @phase site
- * @execute lifecycle="scan" phase="install"
+ * 
  */
+@Mojo (name="report", defaultPhase=LifecyclePhase.SITE)
+@Execute( lifecycle="scan", phase=LifecyclePhase.INSTALL )
 public class ReportMojo
     extends ScanMojo
     implements MavenReport
@@ -28,35 +33,36 @@ public class ReportMojo
     /**
      * Directory where reports will go.
      * 
-     * @parameter expression="${project.reporting.outputDirectory}/ounce"
-     * @required
-     * @readonly
+     * 
      */
+	@Parameter (property="ounce.reportOutputDirectory", defaultValue="${project.reporting.outputDirectory}/ounce", required=true, readonly=true)
     private File reportOutputDirectory;
 
     /**
      * Specify the name of an existing assessment for which to generate a report. If not specified, Ounce/Maven scans
      * the application and generates the report from that assessment.
      * 
-     * @parameter expression="${ounce.existingAssessmentFile}"
+     * 
      */
+	@Parameter (property="ounce.existingAssessmentFile")
     String existingAssessmentFile;
 
     /**
      * The current Project.
      * 
-     * @parameter expression="${project}"
-     * @readonly
+     * 
      */
+	@Parameter (property="project", readonly=true)
     protected MavenProject project;
 
     /**
      * For internal use only.
      * 
-     * @component
+     * 
      * @required
      * @readonly
      */
+	@Component
     private Renderer siteRenderer;
 
     protected Renderer getSiteRenderer()
@@ -160,7 +166,7 @@ public class ReportMojo
     }
 
     /**
-     * @see org.apache.maven.reporting.MavenReport#setReportOutputDirectory()
+     * 
      */
     public void setReportOutputDirectory( File outputDirectory )
     {

@@ -39,6 +39,7 @@ import java.util.Map;
 
 import org.apache.maven.plugin.logging.Log;
 import org.codehaus.mojo.ounce.ProjectOnlyMojo;
+import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.util.StringUtils;
 
 import com.thoughtworks.xstream.XStream;
@@ -46,8 +47,9 @@ import com.thoughtworks.xstream.XStream;
 /**
  * @author <a href="mailto:brianf@apache.org">Brian Fox</a>
  * @author <a href="mailto:sam.headrick@ouncelabs.com">Sam Headrick</a>
- * @plexus.component role="org.codehaus.mojo.ounce.core.OunceCore" role-hint="test-xml"
+ * 
  */
+@Component( role=org.codehaus.mojo.ounce.core.OunceCore.class, hint="test-xml" )
 public class OunceCoreXml
     implements OunceCore
 {

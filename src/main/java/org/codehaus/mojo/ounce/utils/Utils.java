@@ -54,9 +54,9 @@ public class Utils
     }
 
     /**
-     * @param path
-     * @param pathVariableMap
-     * @return
+     * @param path path string
+     * @param pathProperties path properties map
+     * @return path string
      */
     static public String convertToVariablePath( String path, Map pathProperties ) {
         if ( path != null && pathProperties != null && pathProperties.size() > 0 ) {
@@ -91,8 +91,8 @@ public class Utils
     /**
      * Use reflection to generate a toString with all parameters.
      * 
-     * @param obj
-     * @return
+     * @param obj object
+     * @return object as string
      */
     public static synchronized String getDynamicToString( Object obj )
     {
@@ -199,7 +199,7 @@ public class Utils
 	 * Gets a List of files in the given directory of a specified type. 
 	 * @param directory The directory to search.
 	 * @param extension The file extension to match.
-	 * @return A List<String> of files of the given type or null if the given directory doesn't exist.
+	 * @return A List &lt;String&gt; of files of the given type or null if the given directory doesn't exist.
 	 */
 	public static List<String> getFilesOfType(File directory, String extension) {
 		List<String> ret = new ArrayList<String>();

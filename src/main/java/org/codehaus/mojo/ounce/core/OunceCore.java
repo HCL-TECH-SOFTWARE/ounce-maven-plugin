@@ -48,12 +48,12 @@ public interface OunceCore
      * Create an Ounce Application
      * 
      * @param baseDir path of current project (where the file should be created)
-     * @param name Name of the application.
+     * @param theName Name of the application.
      * @param applicationRoot Base folder used to calculate the relative location of the projects.
      * @param projects List of paths to included projects.
      * @param ounceOptions Extra options
      * @param log Logger
-     * @throws OunceCoreException
+     * @throws OunceCoreException exception occurs when creating application
      */
     void createApplication( String baseDir, String theName, String applicationRoot, List projects, Map ounceOptions,Log log )
         throws OunceCoreException;
@@ -64,8 +64,10 @@ public interface OunceCore
     /**
      * Create an Ounce Project
      * 
-     * @param baseDir path of current project (where the file should be created)
+     * @param baseDir Path of current project (where the file should be created)
      * @param name Name of the project.
+     * @param jspCompilerInfoName Name of jsp compiler info
+     * @param jspCompilerType Type of jsp compiler
      * @param projectRoot Base folder used to calculate the relative location of the source roots.
      * @param sourceRoots List of source roots with includes and excludes (bean TBD)
      * @param webRoot Location of the exploded war (null if not a war)
@@ -74,10 +76,12 @@ public interface OunceCore
      * @param compilerOptions Bean containing compiler options (based on maven-compiler-plugin options)
      * @param packaging The packaging type of the current project.
      * @param ounceOptions Extra Ounce options
+     * @param forceWeb Boolean flag indicate force web
      * @param analyzeStrutsFramework Whether to analyze Struts framework
      * @param importStrutsValidation Whether to import Struts validation routines
+     * @param projectDir Project directory
      * @param log Logger
-     * @throws OunceCoreException
+     * @throws OunceCoreException exception occurs when creating project
      */
     void createProject( String baseDir, String name, String jspCompilerInfoName, String jspCompilerType, String projectRoot, List sourceRoots, String webRoot,
                         String classPath, String jdkName, String compilerOptions, String packaging, Map ounceOptions, boolean forceWeb, boolean analyzeStrutsFramework,
@@ -92,6 +96,7 @@ public interface OunceCore
      * @param applicationFile the application file to scan (if name is not used)
      * @param assessmentName A name for the assessment.
      * @param assessmentOutput The location to store the assessment results.
+     * @param scanconfig Scan configuration
      * @param caller A name to use for auditing purposes.
      * @param reportType generate this type of report
      * @param reportOutputType use this output type for the report
@@ -100,8 +105,12 @@ public interface OunceCore
      * @param ounceOptions Extra Ounce options
      * @param installDir location of ounce client
      * @param wait if the client should wait for the scan to complete before returning.
-     * @param log
-     * @throws OunceCoreException
+     * @param includeTraceDefinitive Whether to include trace definitive
+     * @param includeTraceSuspect Whether to include trace suspect
+     * @param includeTraceCoverage Whether to include trace coverage
+     * @param appserver_type Application server type
+     * @param log Logger
+     * @throws OunceCoreException exception occurs during scan
      */
     void scan( String applicationFile, String assessmentName, String assessmentOutput, String scanconfig ,String caller,
                String reportType, String reportOutputType, String reportOutputLocation, boolean publish,
@@ -119,8 +128,8 @@ public interface OunceCore
      * @param folderID ID of the target assessment.
      * @param installDir location of ounce client
      * @param wait if the client should wait for the scan to complete before returning.
-     * @param log
-     * @throws OunceCoreException
+     * @param log Logger
+     * @throws OunceCoreException exception occurs when publishing the assessment file to the AppScan Enterprise Server
      */
     void publishASE(String aseApplication, String nameToPublish, String assessmentFile, String caller, String folderID,
     		String installDir, boolean wait, Log log) throws OunceCoreException;
@@ -128,8 +137,10 @@ public interface OunceCore
     /**
      * Creates any required path variables.
      * 
-     * @param pathVariableMap
-     * @throws OunceCoreException
+     * @param pathVariableMap path variable map
+     * @param installDir install directory
+     * @param log Logger
+     * @throws OunceCoreException exception occurs when creating path variables
      */
     void createPathVariables( Map pathVariableMap, String installDir, Log log )
         throws OunceCoreException;

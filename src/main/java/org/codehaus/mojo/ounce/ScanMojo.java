@@ -34,6 +34,10 @@ import java.util.Set;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Execute;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.codehaus.mojo.ounce.core.OunceCore;
 import org.codehaus.mojo.ounce.core.OunceCoreException;
 import org.codehaus.mojo.ounce.utils.Utils;
@@ -44,10 +48,10 @@ import org.codehaus.plexus.util.StringUtils;
  * This mojo allows an on demand scan of an application and the optional publishing of the results.
  * 
  * @author <a href="mailto:brianf@apache.org">Brian Fox</a>
- * @goal scan
- * @aggregator
- * @execute lifecycle="scan" phase="package"
+ * 
  */
+@Mojo (name="scan", aggregator=true)
+@Execute( lifecycle="scan", phase=LifecyclePhase.PACKAGE )
 public class ScanMojo
     extends AbstractOunceMojo
 {
@@ -55,15 +59,17 @@ public class ScanMojo
     /**
      * The location of the application file (.paf) to scan.</br>
      * DO NOT USE
-     * @parameter expression="${ounce.applicationFile}" default-value="${ounce.appDir}/${project.artifactId}.paf"
+     * 
      */
+	@Parameter (property="ounce.applicationFile", defaultValue="${ounce.appDir}/${project.artifactId}.paf")
     String applicationFile;
 
     /**
      * A name to help identify the assessment.
      * 
-     * @parameter expression="${ounce.assessmentName}"
+     * 
      */
+	@Parameter (property="ounce.assessmentName")
     String assessmentName;
 
     /**
@@ -72,16 +78,18 @@ public class ScanMojo
      * Command line variable: -Dounce.assessmentOutput</br>
      * Example: -Dounce.assessmentOutput="MyAssessment.ozasmt"
      * 
-     * @parameter expression="${ounce.assessmentOutput}"
+     * 
      */
+	@Parameter (property="ounce.assessmentOutput")
     String assessmentOutput;
 
     /**
      * A short string to help identify the corresponding entries in the ounceauto log file.<br/>
      * Command line variable: -Dounce.caller
      * 
-     * @parameter expression="${ounce.caller}"
+     * 
      */
+	@Parameter (property="ounce.caller")
     String caller;
 
     /**
@@ -94,8 +102,9 @@ public class ScanMojo
      * Command line variable: -Dounce.reportType</br>
      * Example: -Dounce.reportType="Findings"
      * 
-     * @parameter expression="${ounce.reportType}"
+     * 
      */
+	@Parameter (property="ounce.reportType")
     String reportType;
 
     /**
@@ -104,8 +113,9 @@ public class ScanMojo
      * Command line variable: -Dounce.reportOutputType</br>
      * Example: -Dounce.reportOutputType="html"
      * 
-     * @parameter expression="${ounce.reportOutputType}"
+     * 
      */
+	@Parameter (property="ounce.reportOutputType")
     String reportOutputType;
 
     /**
@@ -113,8 +123,9 @@ public class ScanMojo
      * Command line variable: -Dounce.reportOutputPath</br>
      * Example: -Dounce.reportOutputPath="C:\MyReports"
      * 
-     * @parameter expression="${ounce.reportOutputPath}"
+     * 
      */
+	@Parameter (property="ounce.reportOutputPath")
     String reportOutputPath;
 
     /**
@@ -122,8 +133,9 @@ public class ScanMojo
      * Command line variable: -Dounce.includeSrcBefore</br>
      * Example: -Dounce.includeSrcBefore=5
      * 
-     * @parameter expression="${ounce.includeSrcBefore}"
+     * 
      */
+	@Parameter (property="ounce.includeSrcBefore")
     int includeSrcBefore = -1;
 
     /**
@@ -131,8 +143,9 @@ public class ScanMojo
      * Command line variable: -Dounce.includeSrcAfter</br>
      * Example: -Dounce.includeSrcAfter=5
      * 
-     * @parameter expression="${ounce.includeSrcAfter}"
+     * 
      */
+	@Parameter (property="ounce.includeSrcAfter")
     int includeSrcAfter = -1;
     
     /**
@@ -140,8 +153,9 @@ public class ScanMojo
      * Command line variable: -Dounce.includeTraceDefinitive</br>
      * Example: -Dounce.includeTraceDefinitive=true
      * 
-     * @parameter expression="${ounce.includeTraceDefinitive}"
+     * 
      */
+	@Parameter (property="ounce.includeTraceDefinitive")
     boolean includeTraceDefinitive = false;
     
     /**
@@ -149,8 +163,9 @@ public class ScanMojo
      * Command line variable: -Dounce.includeTraceSuspect</br>
      * Example: -Dounce.includeTraceSuspect=true
      * 
-     * @parameter expression="${ounce.includeTraceSuspect}"
+     * 
      */
+	@Parameter (property="ounce.includeTraceSuspect")
     boolean includeTraceSuspect = false;
     
     /**
@@ -158,8 +173,9 @@ public class ScanMojo
      * Command line variable: -Dounce.includeTraceCoverage
      * Example: -Dounce.includeTraceCoverage=true
      * 
-     * @parameter expression="${ounce.includeTraceCoverage}"
+     * 
      */
+	@Parameter (property="ounce.includeTraceCoverage")
     boolean includeTraceCoverage = false;
 
     /**
@@ -167,8 +183,9 @@ public class ScanMojo
      * Command line variable: -Dounce.publish</br>
      * Example: -Dounce.publish=true
      * 
-     * @parameter expression="${ounce.publish}" default-value="false"
+     * 
      */
+	@Parameter (property="ounce.publish", defaultValue="false")
     boolean publish;
 
     /**
@@ -176,8 +193,9 @@ public class ScanMojo
      * Command line variable: -Dounce.installDir </br>
      * Example: Dounce.installDir="C:\Program Files (x86)\IBM\AppScanSource"
      * 
-     * @parameter expression="${ounce.installDir}"
+     * 
      */
+	@Parameter (property="ounce.installDir")
     String installDir;
 
     /**
@@ -187,8 +205,9 @@ public class ScanMojo
      * Command line variable: -Dounce.wait</br>
      * Example: -Dounce.wait=true
      * 
-     * @parameter expression="${ounce.wait}" default-value="false"
+     * 
      */
+	@Parameter (property="ounce.wait", defaultValue="false")
     boolean waitForScan;
     //private final String SPACE="\u0000";
     /**
@@ -196,17 +215,17 @@ public class ScanMojo
      * Command line variable: -Dounce.scanconfig</br>
      * Example: -Dounce.scanconfig="Normal scan"
      * 
-     * @parameter expression="${ounce.scanconfig}"
      * 
      * 
      */
+	@Parameter (property="ounce.scanconfig")
     String scanConfig;
     
     /**
      * 
-     * @parameter expression="${ounce.projectFile}"
      * 
      */
+	@Parameter (property="ounce.projectFile")
     String projectFile;
     
     /**
@@ -218,8 +237,9 @@ public class ScanMojo
      * Command line variable: -Dounce.appserver_type
      * Example: -Dounce.appserver_type="WebSphere 8.5"
      * 
-     * @parameter expression="${ounce.appserver_type}"
+     * 
      */
+	@Parameter (property="ounce.appserver_type")
     String appserver_type;
 
     /**
@@ -281,7 +301,7 @@ public class ScanMojo
      * This method checks the cache to see if the scan should be run. It is used to avoid multiple invocations of scan
      * in the instance of a forked build.
      * 
-     * @return
+     * @return boolean value to see if the scan should be run
      */
     protected boolean shouldExecute()
     {
