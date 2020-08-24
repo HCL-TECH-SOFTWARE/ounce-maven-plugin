@@ -31,11 +31,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.maven.plugin.logging.Log;
+import org.codehaus.plexus.component.annotations.Component;
 
 /**
  * @author <a href="mailto:brianf@apache.org">Brian Fox</a>
- * @plexus.component role="org.codehaus.mojo.ounce.core.OunceCore" role-hint="console"
+ * 
  */
+@Component( role=org.codehaus.mojo.ounce.core.OunceCore.class, hint="console" )
 public class OunceCoreConsole
     implements OunceCore
 {

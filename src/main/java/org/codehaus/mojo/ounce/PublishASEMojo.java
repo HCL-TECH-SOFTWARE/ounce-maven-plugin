@@ -8,6 +8,11 @@ package org.codehaus.mojo.ounce;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Execute;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.codehaus.mojo.ounce.core.OunceCore;
 import org.codehaus.plexus.util.StringUtils;
 
@@ -17,11 +22,10 @@ import org.codehaus.plexus.util.StringUtils;
  * Enterprise
  * 
  * @author <a href="mailto:sherardh@us.ibm.com">Sherard Howe</a>
- * @goal publishASE
- * @aggregator
- * @execute lifecycle="scan" phase="package"
+ * 
  */
-
+@Mojo (name="publishASE", aggregator=true)
+@Execute( lifecycle="scan", phase=LifecyclePhase.PACKAGE )
 public class PublishASEMojo extends AbstractOunceMojo {
 	
 	
@@ -29,25 +33,25 @@ public class PublishASEMojo extends AbstractOunceMojo {
 	/**
 	 * This is the name of the application inside of AppScan Enterprise
 	 *
-	 * @parameter expression="${ounce.aseApplication}"
+	 * 
 	 */
-	
+	@Parameter (property="ounce.aseApplication")
 	String aseApplication;
 	
 	/**
 	 * This is the name that the assessment will be saved as in the Enterprise Console.
 	 *
-	 * @parameter expression="${ounce.name}"
+	 * 
 	 */
-	
+	@Parameter (property="ounce.name")
 	String name;
 	
 	/**
 	 * This is the assessment file that will be published to AppScan Enterprise
 	 * 
-	 * @parameter expression="${ounce.assessmentOutput}" default-value="${basedir}/${project.artifactId}.ozasmt"
+	 * 
 	 */
-	
+	@Parameter (property="ounce.assessmentOutput", defaultValue="${basedir}/${project.artifactId}.ozasmt")
 	String assessmentOutput;
 	
 	/**
@@ -55,26 +59,26 @@ public class PublishASEMojo extends AbstractOunceMojo {
 	 * the name of an actual user, but this is not required. The caller name is written
 	 * to the ounceauto log file
 	 * 
-	 * @parameter expression="${ounce.caller}" 
+	 * 
 	 */
-	
+	@Parameter (property="ounce.caller")
 	String caller;
 	
 	/**
 	 * Optional. Enterprise Console folder to publish to. If this argument is not used, the
 	 * assessment will be published to your default Enterprise Console folder.
 	 * 
-	 * @parameter expression="${ounce.folderID}"
+	 * 
 	 */
-	
+	@Parameter (property="ounce.folderID")
 	String folderID;
 	
 	/**
 	 * The location of the Ounce client installation directory if the Ounce client is not on the path
 	 * 
-	 * @parameter expression="${ounce.installDir}"
+	 * 
 	 */
-	
+	@Parameter (property="ounce.installDir")
 	String installDir;
 	
 	/**
@@ -82,9 +86,9 @@ public class PublishASEMojo extends AbstractOunceMojo {
      * being performed from the report mojo as part of integration with the site target and the site is getting
      * deployed.
      * 
-     * @parameter expression="${ounce.wait}" default-value="false"
+     * 
      */
-	
+	@Parameter (property="ounce.wait", defaultValue="false")
 	boolean waitForScan;
 
 	public void execute() throws MojoExecutionException, MojoFailureException {

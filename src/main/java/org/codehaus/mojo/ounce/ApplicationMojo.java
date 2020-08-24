@@ -37,6 +37,11 @@ import java.util.Map;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Execute;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.mojo.ounce.core.OunceCore;
 import org.codehaus.mojo.ounce.core.OunceCoreApplication;
@@ -55,10 +60,11 @@ import org.codehaus.plexus.util.StringUtils;
  * directly using the externalProjects list. External Applications may also be included. All of their modules will be
  * inherted as part of this application file. Those projects may also be filtered upon import.
  * 
- * @aggregator
- * @phase package
- * @goal application
+ * 
  */
+@Mojo (name="application", 
+		aggregator=true,
+		defaultPhase=LifecyclePhase.PACKAGE)
 public class ApplicationMojo
     extends AbstractOunceMojo
 {
@@ -66,75 +72,83 @@ public class ApplicationMojo
     /**
      * The projects in the current build.
      * 
-     * @parameter expression="${reactorProjects}"
-     * @required
-     * @readonly
+     *
      */
+	@Parameter (property="reactorProjects", required=true, readonly=true)
     private List<MavenProject> projects;
 
     /**
      * An array of directories containing the pom file of any projects to include. If an include pattern is specified,
-     * projects not specifed by include patterns are excluded. <br/> Include only applies to inherited modules, not
-     * external projects. The current project is not filtered. <br/> The include pattern may contain the following
-     * wildcard characters:<br/> *: Zero or more characters<br/> **: Any folders<br/> ?: One and only one character<br/>
+     * projects not specifed by include patterns are excluded. <br> Include only applies to inherited modules, not
+     * external projects. The current project is not filtered. <br> The include pattern may contain the following
+     * wildcard characters:<br> *: Zero or more characters<br> **: Any folders<br> ?: One and only one character<br>
      * 
-     * @parameter
+     * 
      */
+	@Parameter
     protected String[] includes;
 
     /**
      * An array of directories containing the pom file of any projects to exclude. Excludes can contain standard
-     * Ant-style wildcards. <br/> Excludes only apply to inherited modules, not external projects. The current project
+     * Ant-style wildcards. <br> Excludes only apply to inherited modules, not external projects. The current project
      * is not filtered.
      * 
-     * @parameter
+     * 
      */
+	@Parameter
     protected String[] excludes;
 
     /**
      * List of external projects to include. These projects are included after any other projects have been included or
-     * excluded. <br/> The format is: name,path<br/> Where:<br/>
+     * excluded. <br> The format is: name,path<br> Where:<br>
+     * <ul>
      * <li>name is the artifact ID of the project to include.</li>
      * <li>path is the pathname to the project.</li>
+     * </ul>
      * 
-     * @parameter
+     * 
      */
+	@Parameter
     protected List externalProjects;
 
     /**
      * Allows you to include projects from multiple applications. The external application properties are not inherited,
-     * and the external application must already exist. <br/> externalApplications is a list of directories containing
-     * top-level pom files. <br/> The format for externalApplications is:
-     * pathname,[includes|includes],[excludes|excludes] <br/> Where:<br/>
+     * and the external application must already exist. <br> externalApplications is a list of directories containing
+     * top-level pom files. <br> The format for externalApplications is:
+     * pathname,[includes|includes],[excludes|excludes] <br> Where:<br>
+     * <ul>
      * <li>pathname, includes, and excludes are comma delimited; if you have excludes, but no includes, use two commas.</li>
      * <li>Multiple includes or excludes are separated by pipes (\x7c).</li>
      * <li>Excludes can contain standard Ant style wildcards.</li>
+     * </ul>
      * 
-     * @parameter
+     * 
      */
+	@Parameter
     protected List externalApplications;
     
     /**
      * Specifies the directory where to create the ppf file
      * 
-     * @parameter expression="${ounce.projectDir}" default-value="${basedir}"
+     * 
      */
+	@Parameter (property="ounce.projectDir", defaultValue="${basedir}")
     private String projectDir;
     
     /**
      * Specifies the directory where to create the paf file
      * 
-     * @parameter expression="${ounce.appDir}" default-value="${basedir}"
      * 
      */
+	@Parameter (property="ounce.appDir", defaultValue="${basedir}")
     private String appDir;
     
     /**
      * Specifies the directory where to create the paf file
      * 
-     * @parameter expression="${ounce.appName}" default-value="${project.artifactId}"
      * 
      */
+	@Parameter (property="ounce.appName", defaultValue="${project.artifactId}")
     private String appName;
 
     /*
@@ -232,7 +246,7 @@ public class ApplicationMojo
      * project.
      * 
      * @return List of OunceProjectBeans representing each module
-     * @throws IOException
+     * @throws IOException when IOException occurs
      */
     protected List getIncludedModules() throws IOException
     {
@@ -343,10 +357,11 @@ public class ApplicationMojo
     /**
      * This method processes the external Applications and filters them according to the include/exclude patterns
      * 
+     * @param core object implemented OunceCore interface
      * @return List of OunceCoreProject objects
-     * @throws MojoExecutionException
-     * @throws OunceCoreException
-     * @throws IOException
+     * @throws MojoExecutionException when get external applications
+     * @throws OunceCoreException when read applications
+     * @throws IOException when filter the projects retrieved from the external application
      */
     public List getIncludedExternalApplicationProjects( OunceCore core ) throws MojoExecutionException, OunceCoreException, IOException {
         List externalApps = getExternalApplications();
@@ -372,10 +387,10 @@ public class ApplicationMojo
     /**
      * This method filters the projects retrieved from the external application
      * 
-     * @param app
-     * @param extern
-     * @return
-     * @throws IOException
+     * @param app OunceCore application
+     * @param extern external application
+     * @return a list of OunceProjectBean objects
+     * @throws IOException when perform IO operation
      */
     public List filterExternalApplicationProjects( OunceCoreApplication app, ExternalApplication extern ) throws IOException {
         List results = new ArrayList();

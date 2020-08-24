@@ -29,6 +29,11 @@ package org.codehaus.mojo.ounce;
 
 import java.util.List;
 
+import org.apache.maven.plugins.annotations.Execute;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.mojo.ounce.utils.Utils;
 
@@ -39,18 +44,18 @@ import org.codehaus.mojo.ounce.utils.Utils;
  * If you would rather have the project built automatically during your build, use the project-only goal instead.
  * 
  * @author <a href="mailto:brianf@apache.org">Brian Fox</a>
- * @requiresDependencyResolution test
- * @goal project
- * @execute phase="process-sources"
+ * 
  */
+@Mojo (name="project", requiresDependencyResolution=ResolutionScope.TEST)
+@Execute( phase=LifecyclePhase.PROCESS_SOURCES )
 public class ProjectMojo extends ProjectOnlyMojo {
 
     /**
      * The project executed when forked.
      * 
-     * @parameter expression="${executedProject}"
-     * @readonly
+     *
      */
+	@Parameter (property="executedProject", readonly=true)
     protected MavenProject executedProject;
 
     /**

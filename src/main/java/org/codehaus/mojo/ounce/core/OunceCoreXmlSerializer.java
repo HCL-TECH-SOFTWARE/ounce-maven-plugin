@@ -49,6 +49,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.xerces.dom.DocumentImpl;
 import org.codehaus.mojo.ounce.utils.Utils;
+import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.util.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -59,8 +60,9 @@ import org.w3c.dom.NodeList;
 
 /**
  * @author <a href="mailto:sam.headrick@ouncelabs.com">Sam Headrick</a>
- * @plexus.component role="org.codehaus.mojo.ounce.core.OunceCore" role-hint="ouncexml"
+ * 
  */
+@Component( role=org.codehaus.mojo.ounce.core.OunceCore.class, hint="ouncexml" )
 public class OunceCoreXmlSerializer implements OunceCore
 {
     private HashMap <String,Object> m_existingProjectAttributes;

@@ -38,6 +38,10 @@ import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.codehaus.mojo.ounce.core.OunceCoreException;
 import org.codehaus.mojo.ounce.utils.Utils;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
@@ -48,10 +52,11 @@ import org.codehaus.plexus.component.repository.exception.ComponentLookupExcepti
  * command line, use the project goal instead.
  * 
  * @author <a href="mailto:brianf@apache.org">Brian Fox</a>
- * @requiresDependencyResolution test
- * @goal project-only
- * @phase package
+ * 
  */
+@Mojo (name="project-only",
+		requiresDependencyResolution=ResolutionScope.TEST,
+		defaultPhase=LifecyclePhase.PACKAGE)
 public class ProjectOnlyMojo extends AbstractOunceMojo
 {
     public static final String M2_REPO = "M2_REPO";
@@ -61,8 +66,9 @@ public class ProjectOnlyMojo extends AbstractOunceMojo
      * system. If includeTestSources is true, then the classpathScope reverts to test. Otherwise, the default is
      * compile.
      * 
-     * @parameter default-value="compile" expression="${ounce.classpathScope}";
+     * 
      */
+    @Parameter (property="ounce.classpathScope", defaultValue="compile")
     private String classpathScope;
 
     /**
@@ -84,113 +90,126 @@ public class ProjectOnlyMojo extends AbstractOunceMojo
     /**
      * JSP compiler type name / application server.  
      * 
-     * @parameter default-value="Tomcat 8" expression="${ounce.jspCompilerName}"
+     * 
      */
+    @Parameter (property="ounce.jspCompilerName", defaultValue="Tomcat 8")
     private String jspCompilerName;
 
     /**
      * JSP compiler type name / application server.  
      * 
-     * @parameter default-value="13" expression="${ounce.jspCompilerType}"
+     * 
      */
+    @Parameter (property="ounce.jspCompilerType", defaultValue="13")
     private String jspCompilerType;
 
     /**
      * JDK configuration known to Ounce Core.
      * 
-     * @parameter expression="${ounce.jdkName}"
+     * 
      */
+    @Parameter (property="ounce.jdkName")
     private String jdkName;
     
     /**
      * Options to pass to the javac compiler.
      * 
-     * @parameter expression="${ounce.javaCompilerOptions}"
+     * 
      */
+    @Parameter (property="ounce.javaCompilerOptions")
     private String javaCompilerOptions;
 
     /**
      * If TestSources should be included in the compilable sources. If set, adds project.getTestSourceRoot() to the path
      * and defaults the classpathScope to test.
      * 
-     * @parameter expression="${ounce.includeTestSources}" default-value="false"
+     * 
      */
+    @Parameter (property="ounce.includeTestSources", defaultValue="false")
     protected boolean includeTestSources;
 
     /**
      * The directory where the webapp is built for war
      * projects.
      * 
-     * @parameter expression="${project.build.directory}/${project.build.finalName}"
+     * 
      */
+    @Parameter (property="ounce.webappDirectory", defaultValue="${project.build.directory}/${project.build.finalName}")
     private String webappDirectory;
     
     /**
      * Whether the plugin should use the Ounce Automation Server to create any necessary variables (such as M2_REPO).
      * Requires that the Ounce Automation Server be installed.
      * 
-     * @parameter expression="${ounce.createVariables}" default-value="true"
+     * 
      */
+    @Parameter (property="ounce.createVariables", defaultValue="true")
     protected boolean createVariables;
 
     /**
      * Whether the plugin should force project files to be generated web projects
      * regardless of what the packaging is set to in the pom.xml.
      * 
-     * @parameter expression="${ounce.forceWeb}" default-value="false"
+     * 
      */
+    @Parameter (property="ounce.forceWeb", defaultValue="false")
     protected boolean forceWeb;
 
     /**
      * The location of the Ounce client installation directory. Required if ounceauto is not on the path.
      * 
-     * @parameter expression="${ounce.installDir}"
+     * 
      */
+    @Parameter (property="ounce.installDir")
     private String installDir;
     
     /**
      * Whether to analyze the framework for a Struts application
      * 
-     * @parameter expression="${ounce.analyzeStrutsFramework}" default-value="false"
+     * 
      */
+    @Parameter (property="ounce.analyzeStrutsFramework", defaultValue="false")
     private boolean analyzeStrutsFramework;
     
     /**
      * Whether to import Struts validation routines
      * 
-     * @parameter expression="${ounce.importStrutsValidation}" default-value="false"
+     * 
      */
+    @Parameter (property="ounce.importStrutsValidation", defaultValue="false")
     private boolean importStrutsValidation;
 
     /**
      * Location of the local repository.
      * 
-     * @parameter expression="${localRepository}"
-     * @readonly
-     * @required
+     * 
      */
+    @Parameter (property="localRepository", required=true, readonly=true)
     protected ArtifactRepository local;
 
     /**
      * 
-     * @parameter expression="${ounce.precompileScan}" default-value="false"
+     * 
      * 
      */
+    @Parameter (property="ounce.precompileScan", defaultValue="false")
     private boolean precompileScan;
     
     /**
      * Specifies the directory where to create the ppf file
      * 
-     * @parameter expression="${ounce.projectDir}" default-value="${basedir}"
+     * 
      */
+    @Parameter (property="ounce.projectDir", defaultValue="${basedir}")
     private String projectDir;
     
     /**
      * Specifies the directory where to create the paf file
      * 
-     * @parameter expression="${ounce.appDir}" default-value="${basedir}"
+     * 
      * 
      */
+    @Parameter (property="ounce.appDir", defaultValue="${basedir}")
     private String appDir;
 
     /**
@@ -198,9 +217,10 @@ public class ProjectOnlyMojo extends AbstractOunceMojo
      * are typically jar files that are part of the application server
      * installation.  Comma separated list of files with absolute path.
      * 
-     * @parameter expression="${ounce.externalJars}" default-value="${basedir}"
+     * 
      * 
      */
+    @Parameter (property="ounce.externalJars", defaultValue="${basedir}")
     private String externalJars;
 
     /*
@@ -272,8 +292,8 @@ public class ProjectOnlyMojo extends AbstractOunceMojo
     /**
      * Gets the classpath elements and returns a properly formatted classpath.
      * 
-     * @return
-     * @throws MojoExecutionException
+     * @return a properly formatted classpath
+     * @throws MojoExecutionException if classpath scope is invalid
      */
     protected String getClasspath() throws MojoExecutionException
     {
@@ -309,7 +329,7 @@ public class ProjectOnlyMojo extends AbstractOunceMojo
      * Gets the properly scoped classpathElements from the Maven Project
      * 
      * @return List of classpath strings.
-     * @throws MojoExecutionException
+     * @throws MojoExecutionException if classpath scope is invalid
      */
     protected List getClasspathElements()
         throws MojoExecutionException
@@ -443,7 +463,7 @@ public class ProjectOnlyMojo extends AbstractOunceMojo
     }
     
     /**
-     * @param toAnalyzeStrutsFramework whether to analyze Struts Framework
+     * @param analyzeStrutsFramework whether to analyze Struts Framework
      */
     protected void setAnalyzeStrutsFramework(boolean analyzeStrutsFramework) {
     	this.analyzeStrutsFramework = analyzeStrutsFramework;

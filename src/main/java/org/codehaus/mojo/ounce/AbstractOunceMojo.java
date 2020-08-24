@@ -33,6 +33,7 @@ import java.util.Map;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.logging.Log;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.mojo.ounce.core.OunceCore;
 import org.codehaus.plexus.PlexusConstants;
@@ -52,18 +53,17 @@ public abstract class AbstractOunceMojo
     /**
      * The current Project.
      * 
-     * @parameter expression="${project}"
-     * @readonly
+     * 
      */
+	@Parameter (property="project", readonly=true)
     protected MavenProject project;
 
     /**
      * The Maven Session Object
      * 
-     * @parameter default-value="${session}"
-     * @required
-     * @readonly
+     *
      */
+	@Parameter (defaultValue="${session}", required=true, readonly=true)
     private MavenSession mavenSession;
 
     /**
@@ -71,32 +71,33 @@ public abstract class AbstractOunceMojo
      * leave this set to the default. Use -Dounce.core=console to have have the output displayed instead of written to
      * the file for debugging purposes.
      * 
-     * @parameter default-value="ouncexml" expression="${ounce.core}
      */
+	@Parameter (property="ounce.core", defaultValue="ouncexml")
     protected String coreHint;
 
     /**
-     * Map of Ounce variable names and paths.<br/> pathVariableMap variables are automatically registered with Ounce by
+     * Map of Ounce variable names and paths.<br> pathVariableMap variables are automatically registered with Ounce by
      * the Ounce/Maven plugin if the Ounce Automation Server is installed.
      * 
-     * @parameter
+     * 
      */
+	@Parameter
     protected Map<String, String> pathVariableMap;
 
     /**
      * The name of the project set in the pom.
      * 
-     * @parameter expression="${project.artifactId}
-     * @readonly
+     * 
      */
+	@Parameter (property="project.artifactId", readonly=true)
     protected String name;
 
     /**
      * The root of the project.
      * 
-     * @parameter expression="${basedir}"
-     * @readonly
+     * 
      */
+	@Parameter (property="basedir", readonly=true)
     private String projectRoot;
 
     /**
@@ -105,8 +106,9 @@ public abstract class AbstractOunceMojo
      * have no source to be analyzed Only set this if you have source in your "pom" packaging projects that needs to be
      * scanned.
      * 
-     * @parameter expression="${ounce.skipPoms}" default-value="true"
+     * 
      */
+	@Parameter (property="ounce.skipPoms", defaultValue="true")
     protected boolean skipPoms;
 
     /**
@@ -213,7 +215,7 @@ public abstract class AbstractOunceMojo
     /**
      * Returns true if the current project is located at the Execution Root Directory (where mvn was launched)
      * 
-     * @return
+     * @return true if the current project is located at the Execution Root Directory (where mvn was launched)
      */
     protected boolean isThisTheExecutionRoot()
     {
