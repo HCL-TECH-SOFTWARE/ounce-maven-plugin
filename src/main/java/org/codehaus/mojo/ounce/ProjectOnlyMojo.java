@@ -380,7 +380,7 @@ public class ProjectOnlyMojo extends AbstractOunceMojo
     	if(!project.getPackaging().equalsIgnoreCase("war"))
     		return "";
     	
-    	return Utils.makeRelative(webappDirectory, projectDir);
+    	return Utils.makeRelative(webappDirectory, projectDir) + ".war";
     }
 	
 	private void configureVariables() throws OunceCoreException, ComponentLookupException {
