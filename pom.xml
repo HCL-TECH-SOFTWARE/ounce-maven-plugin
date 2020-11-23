@@ -64,8 +64,8 @@
   </developers>
 
   <scm>
-    <connection>scm:git:git//github.com/hclproducts/ounce-maven-plugin.git</connection>
-    <developerConnection>scm:git:ssh//github.com:hclproducts/ounce-maven-plugin.git</developerConnection>
+    <connection>scm:git:ssh://github.com/hclproducts/ounce-maven-plugin.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/hclproducts/ounce-maven-plugin.git</developerConnection>
     <url>https://github.com/hclproducts/ounce-maven-plugin</url>
   </scm>
 
