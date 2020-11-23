@@ -3,7 +3,7 @@
 <!--
 * Copyright (c) 2007-2012, Ounce Labs, Inc.
 * All rights reserved.
-* (c) Copyright HCL Technologies Ltd. 2017. All rights reserved.
+* (c) Copyright HCL Technologies Ltd. 2017, 2020. All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
 * modification, are permitted provided that the following conditions are met:
@@ -170,6 +170,11 @@
         <plugin>
           <artifactId>maven-deploy-plugin</artifactId>
           <version>2.6</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-site-plugin</artifactId>
+          <version>3.3</version>
         </plugin>
       </plugins>
     </pluginManagement>
