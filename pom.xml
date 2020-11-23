@@ -29,13 +29,7 @@
 -->
 
   <modelVersion>4.0.0</modelVersion>
-
-  <parent>
-    <groupId>org.codehaus.mojo</groupId>
-    <artifactId>mojo-parent</artifactId>
-    <version>30</version>
-  </parent>
-
+  
   <groupId>org.codehaus.mojo</groupId>
   <artifactId>ounce-maven-plugin</artifactId>
   <version>1.6.1-SNAPSHOT</version>
@@ -43,7 +37,7 @@
 
   <name>Ounce Maven Plugin</name>
   <description>Easily integrate security testing into your Maven builds using the ounce-maven-plugin and AppScan Source.</description>
-  <url>https://www.ibm.com/support/knowledgecenter/en/SSS9LM_9.0.3/com.ibm.rational.appscansrc.utilities.doc/topics/maven_using.html</url>
+  <url>https://help.hcltechsw.com/appscan/Source/9.0.3/topics/maven.html</url>
 
 
   <licenses>
@@ -67,22 +61,11 @@
     <connection>scm:git:ssh://github.com/hclproducts/ounce-maven-plugin.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/hclproducts/ounce-maven-plugin.git</developerConnection>
     <url>https://github.com/hclproducts/ounce-maven-plugin</url>
+    <tag>HEAD</tag>
   </scm>
 
   <build>
     <plugins>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>cobertura-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <phase>clean</phase>
-            <goals>
-              <goal>clean</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
       <plugin>
         <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-component-metadata</artifactId>
@@ -110,74 +93,6 @@
         </configuration>
       </plugin>
     </plugins>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <artifactId>maven-clean-plugin</artifactId>
-          <version>2.4.1</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-resources-plugin</artifactId>
-          <version>2.5</version>
-        </plugin>
-        <plugin>
-          <groupId>org.codehaus.plexus</groupId>
-          <artifactId>plexus-component-metadata</artifactId>
-          <version>1.5.5</version>
-        </plugin>
-        <plugin>
-			<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-plugin-plugin</artifactId>
-			<version>3.6.0</version>
-			<configuration>
-			<goalPrefix>ounce</goalPrefix>
-			</configuration>
-			<executions>
-			<execution>
-			<id>default-descriptor</id>
-			<goals>
-			<goal>descriptor</goal>
-			</goals>
-			<phase>process-classes</phase>
-			</execution>
-			</executions>
-		</plugin>
-        <plugin>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>2.3.2</version>
-          <configuration>
-            <source>1.7</source>
-            <target>1.7</target>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>cobertura-maven-plugin</artifactId>
-          <version>2.5.1</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.9</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-jar-plugin</artifactId>
-          <version>2.3.1</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-install-plugin</artifactId>
-          <version>2.3.1</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-deploy-plugin</artifactId>
-          <version>2.6</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-site-plugin</artifactId>
-          <version>3.3</version>
-        </plugin>
-      </plugins>
-    </pluginManagement>
   </build>
 
   <dependencies>
@@ -260,30 +175,6 @@
 	</distributionManagement>
 
   <profiles>
-    <!-- Avoid re-generating help mojo when building test plugin (otherwise we get duplicate mojo errors) -->
-    <profile>
-      <id>skip-help-mojo</id>
-      <activation>
-        <file>
-          <exists>pom-test.xml</exists>
-        </file>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-plugin-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>help-mojo</id>
-                <configuration>
-                  <skip>true</skip>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
 	<profile> 
     	<id>release</id>
     	<build>
@@ -329,15 +220,15 @@
 		      	</executions>
 		      </plugin>
 		      <plugin>
-		  		<groupId>org.sonatype.plugins</groupId>
-		  			<artifactId>nexus-staging-maven-plugin</artifactId>
-		  			<version>1.6.7</version>
-		  			<extensions>true</extensions>
-		  			<configuration>
-		     			<serverId>ossrh</serverId>
-		     			<nexusUrl>https://oss.sonatype.org/</nexusUrl>
-		     			<autoReleaseAfterClose>true</autoReleaseAfterClose>
-		  			</configuration>
+  				<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-release-plugin</artifactId>
+  					<version>2.5.3</version>
+  					<configuration>
+    					<autoVersionSubmodules>true</autoVersionSubmodules>
+    					<useReleaseProfile>false</useReleaseProfile>
+    					<releaseProfiles>release</releaseProfiles>
+    					<goals>deploy</goals>
+  					</configuration>
 			  </plugin>
 			</plugins>
     	</build>
