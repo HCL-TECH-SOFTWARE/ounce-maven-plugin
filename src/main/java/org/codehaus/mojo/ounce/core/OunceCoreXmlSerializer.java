@@ -180,7 +180,14 @@ public class OunceCoreXmlSerializer implements OunceCore
         for ( int i = 0; i < theProjects.size(); i++ )
         {
             OunceProjectBean projectBean = (OunceProjectBean) theProjects.get( i );
-            String projectPath = new File(projectBean.getPath(), projectBean.getName() + ".ppf").getCanonicalPath();
+            String projectDir = projectBean.getPath();
+            
+            //Adjust the project path if the ounce.projectDir option was set.
+            if(System.getProperty("ounce.projectDir") != null)
+            	projectDir = System.getProperty("ounce.projectDir");
+
+            	
+            String projectPath = new File(projectDir, projectBean.getName() + ".ppf").getCanonicalPath();
 
             log.debug("OunceCoreXmlSerializer: Project Path: " + projectPath);
             log.debug("OunceCoreXmlSerializer: Name: " + projectBean.getName());
