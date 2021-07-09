@@ -67,7 +67,7 @@ public class OunceCoreXmlSerializer implements OunceCore
 {
     private HashMap <String,Object> m_existingProjectAttributes;
 
-    public void createApplication(String baseDir, String theName,String applicationRoot, List theProjects, Map options, Log log) throws OunceCoreException
+    public void createApplication(String baseDir, String theName,String applicationRoot, String projectRoot, List theProjects, Map options, Log log) throws OunceCoreException
     {
         // sort them to avoid implementation details messing
         // up the order for testing.
@@ -125,7 +125,7 @@ public class OunceCoreXmlSerializer implements OunceCore
 
                         // now add the new projects so they come first
                         log.debug("OunceCoreXmlSerializer: file path: " + pafFile.getAbsolutePath() + " Root: " + root);
-                        insertChildProjects( xmlDoc, root, theProjects, pafFile.getAbsolutePath(), log );
+                        insertChildProjects( xmlDoc, root, theProjects, pafFile.getAbsolutePath(), projectRoot, log );
                     }
                 }
                 if ( root == null )
@@ -144,7 +144,7 @@ public class OunceCoreXmlSerializer implements OunceCore
                 log.info("Application Name: " + theName);
                 root.setAttribute( "name", theName);
                 xmlDoc.appendChild( root );
-                insertChildProjects( xmlDoc, root, theProjects,pafFile.getAbsolutePath(),log );
+                insertChildProjects( xmlDoc, root, theProjects,pafFile.getAbsolutePath(),projectRoot,log );
             }
 
             // write out the XML
@@ -162,7 +162,7 @@ public class OunceCoreXmlSerializer implements OunceCore
         }
     }
 
-    private void insertChildProjects( Document xmlDoc, Element root, List theProjects,String applicationFile, Log log ) throws IOException
+    private void insertChildProjects( Document xmlDoc, Element root, List theProjects,String applicationFile, String projectRoot, Log log ) throws IOException
     {
         // sort the projects by file path (in reverse order because they are written in reverse)
         Collections.sort( theProjects, new Comparator()
@@ -194,8 +194,7 @@ public class OunceCoreXmlSerializer implements OunceCore
                 existingAttribs.removeNamedItem( "path" );
                 existingAttribs.removeNamedItem( "language_type" );
             }
-
-            projectPath = Utils.makeRelative(projectPath, new File(applicationFile).getParent());
+            projectPath = Utils.makeRelative(projectPath,new File(applicationFile).getParent(),projectRoot);
             project.setAttributeNS( null, "path", projectPath );
             project.setAttributeNS( null, "language_type", "2" );
 
@@ -273,7 +272,6 @@ public class OunceCoreXmlSerializer implements OunceCore
 
             Document xmlDoc;
             Element root = null;
-     
             File ppfFile = new File(projectDir, theName + ".ppf");
             if ( ppfFile.exists() )
             {

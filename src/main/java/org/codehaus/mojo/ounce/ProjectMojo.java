@@ -69,7 +69,7 @@ public class ProjectMojo extends ProjectOnlyMojo {
         if (includeTestSources)
             sourceRoots.addAll(executedProject.getTestCompileSourceRoots());
         
-        return Utils.convertToRelativePaths(sourceRoots, getProjectDir());
+        return Utils.convertToRelativePaths(sourceRoots, getProjectDir(),getProjectRoot());
     }
 
     /**

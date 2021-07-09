@@ -89,7 +89,7 @@ public abstract class AbstractOunceMojo
      * 
      * 
      */
-	@Parameter (property="project.artifactId", readonly=true)
+	@Parameter (property="ounce.projectFile",  defaultValue="${project.artifactId}", readonly=true)
     protected String name;
 
     /**

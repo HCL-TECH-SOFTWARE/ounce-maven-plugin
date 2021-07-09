@@ -266,7 +266,7 @@ public class ProjectOnlyMojo extends AbstractOunceMojo
         if (includeTestSources)
             sourceRoots.addAll(project.getTestCompileSourceRoots());
         
-        return Utils.convertToRelativePaths(sourceRoots, projectDir);
+        return Utils.convertToRelativePaths(sourceRoots, projectDir,getProjectRoot());
     }
     
     protected Map<String, String> getOptions() {
@@ -278,7 +278,7 @@ public class ProjectOnlyMojo extends AbstractOunceMojo
     		
     		//Make sure the directory contains .class files
     		if(!Utils.getFilesOfType(classesDir, ".class").isEmpty()) {
-    			String precompiledDir = Utils.makeRelative(classesDir.getAbsolutePath(), projectDir);
+    			String precompiledDir = Utils.makeRelative(classesDir.getAbsolutePath(), projectDir, getProjectRoot());
     			options.put("precompiled", precompiledDir.replace('\\',  '/'));
     		}
     		else
@@ -303,14 +303,14 @@ public class ProjectOnlyMojo extends AbstractOunceMojo
         if ( i.hasNext() ) {
         	// first one, no separator needed
         	String cpe = (String) i.next();
-        	String converted_cpe = Utils.convertClasspathElement( cpe, projectDir, pathVariableMap);
+        	String converted_cpe = Utils.convertClasspathElement( cpe, projectDir,getProjectRoot(), pathVariableMap);
             sb.append( converted_cpe );
             this.getLog().debug("ProjectOnlyMojo|buildClasspath: " + cpe + " converted: " + converted_cpe);
             
             // separate the rest of them with pathSeparator
             while ( i.hasNext() ) {
             	String cpe2 = (String) i.next();
-            	String converted_cpe2 = Utils.convertClasspathElement( cpe2, projectDir, pathVariableMap);
+            	String converted_cpe2 = Utils.convertClasspathElement( cpe2, projectDir,getProjectRoot(), pathVariableMap);
                 sb.append( File.pathSeparator );
                 sb.append( converted_cpe2 );
                 this.getLog().debug("ProjectOnlyMojo|buildClasspath: " + cpe2 + " converted: " + converted_cpe2);
@@ -319,7 +319,7 @@ public class ProjectOnlyMojo extends AbstractOunceMojo
         // Add extrenalJars to the end of the Classpath.
         // This is a comma separated list that needs to be converted to relative paths.
         for(String jar : getExternalJars().split(","))
-        	sb.append(File.pathSeparator + Utils.makeRelative(jar,  projectDir));
+        	sb.append(File.pathSeparator + Utils.makeRelative(jar,  projectDir,getProjectRoot()));
 
         return sb.toString();
     }
@@ -379,7 +379,7 @@ public class ProjectOnlyMojo extends AbstractOunceMojo
     	if(!project.getPackaging().equalsIgnoreCase("war"))
     		return "";
     	
-    	return Utils.makeRelative(webappDirectory, projectDir);
+    	return Utils.makeRelative(webappDirectory, projectDir, getProjectRoot());
     }
 	
 	private void configureVariables() throws OunceCoreException, ComponentLookupException {

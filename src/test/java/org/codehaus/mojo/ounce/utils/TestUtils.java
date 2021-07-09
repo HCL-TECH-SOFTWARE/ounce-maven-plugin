@@ -71,7 +71,7 @@ public class TestUtils
 
     public void testFilePathConversion()
     {
-    	assertEquals( "." + File.separator + "org" + File.separator + "apache", Utils.makeRelative( "/repo/org/apache", "/repo") );
+    	assertEquals( "." + File.separator + "org" + File.separator + "apache", Utils.makeRelative( "/repo/org/apache", "/repo" , "/repo") );
     	
 /* TODO: Switch over to new methods
         assertEquals( "%M2_REPO%/org/apache", Utils.PathConverter( "/repo/org/apache", "/repo", "M2_REPO" ) );

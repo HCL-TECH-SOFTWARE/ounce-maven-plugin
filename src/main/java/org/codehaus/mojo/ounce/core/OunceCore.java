@@ -50,12 +50,13 @@ public interface OunceCore
      * @param baseDir path of current project (where the file should be created)
      * @param theName Name of the application.
      * @param applicationRoot Base folder used to calculate the relative location of the projects.
+     * @param projectRoot path of the application folder.
      * @param projects List of paths to included projects.
      * @param ounceOptions Extra options
      * @param log Logger
      * @throws OunceCoreException exception occurs when creating application
      */
-    void createApplication( String baseDir, String theName, String applicationRoot, List projects, Map ounceOptions,Log log )
+    void createApplication( String baseDir, String theName, String applicationRoot, String projectRoot, List projects, Map ounceOptions,Log log )
         throws OunceCoreException;
 
     OunceCoreApplication readApplication( String path, Log log )

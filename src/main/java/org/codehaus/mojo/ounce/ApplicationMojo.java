@@ -178,7 +178,7 @@ public class ApplicationMojo
                 coreProjects.addAll( externs );
 
             getLog().debug("AppMojo: Application directory is " + appDir);
-            core.createApplication(appDir, appName, appDir, coreProjects, options , getLog());
+            core.createApplication(appDir, appName, appDir, getProjectRoot(), coreProjects, options , getLog());
         }
         catch ( ComponentLookupException e )
         {
@@ -282,7 +282,7 @@ public class ApplicationMojo
             MavenProject prj = (MavenProject) iter.next();
 
             if (!skipPoms || !prj.getPackaging().equalsIgnoreCase("pom")) {
-				beanProjects.add( new OunceProjectBean(prj.getBasedir().getPath(), prj.getArtifactId()));
+				beanProjects.add( new OunceProjectBean(projectDir, name));
             }
             else
                 getLog().debug( "Skipping Pom: " + prj.getArtifactId() );

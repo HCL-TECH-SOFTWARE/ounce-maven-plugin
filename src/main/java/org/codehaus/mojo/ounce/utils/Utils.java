@@ -44,11 +44,11 @@ public class Utils
 {
     static final String propertyFormat = "%**%";
 
-    public static String convertClasspathElement(String classpathElement, String ounceProjectDir, Map ounceVariableMap )
+    public static String convertClasspathElement(String classpathElement, String ounceProjectDir, String baseDir, Map ounceVariableMap )
     {
     	String ret = convertToVariablePath(classpathElement, ounceVariableMap);
     	if(ret.equals(classpathElement) && ounceProjectDir != null)
-			ret = makeRelative(classpathElement, ounceProjectDir);
+			ret = makeRelative(classpathElement, ounceProjectDir, baseDir);
 
         return ret;
     }
@@ -79,11 +79,11 @@ public class Utils
 	 *
      * @return A List of relative paths
      */
-    static public List<String> convertToRelativePaths(List<String> paths, String baseDir)
+    static public List<String> convertToRelativePaths(List<String> paths, String projDir, String baseDir)
     {
         ArrayList<String> relativePaths = new ArrayList<String>();
         for(String path : paths)
-        	relativePaths.add(makeRelative(path, baseDir));
+        	relativePaths.add(makeRelative(path,projDir,baseDir));
         
         return relativePaths;
     }
@@ -166,8 +166,11 @@ public class Utils
 		return true;
 	}
 	
-	public static String makeRelative(String sPathToBeMadeRelative, String sReferenceDir)
+	public static String makeRelative(String sPathToBeMadeRelative, String sReferenceDir,  String baseDir)
 	{
+		if (!sReferenceDir.equals(baseDir)) {
+			return sPathToBeMadeRelative;
+		}
 		//Ensure absolute paths.
 		try {
 			File dir = new File(sReferenceDir);
