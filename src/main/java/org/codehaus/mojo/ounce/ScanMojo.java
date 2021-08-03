@@ -177,7 +177,17 @@ public class ScanMojo
      */
 	@Parameter (property="ounce.includeTraceCoverage")
     boolean includeTraceCoverage = false;
-
+	
+	/**
+     * Include How To Fix information in the report for remediation of findings. </br>
+     * Command line variable: -Dounce.includeHowToFix
+     * Example: -Dounce.includeHowToFix=true
+     * 
+     * 
+     */
+	@Parameter (property="ounce.includeHowToFix")
+    boolean includeHowToFix = false;
+	
     /**
      * Automatically publish the assessment following the completion of the scan.</br>
      * Command line variable: -Dounce.publish</br>
@@ -277,7 +287,7 @@ public class ScanMojo
                 }
                 OunceCore core = getCore();
                 core.scan( Utils.convertToVariablePath( applicationFile, pathVariableMap ), assessmentName,
-                           assessmentOutput, scanConfig,caller, reportType, reportOutputType, reportOutputPath, publish,
+                           assessmentOutput, scanConfig,caller, reportType, reportOutputType, reportOutputPath, includeHowToFix, publish,
                            this.options, this.installDir, waitForScan, includeTraceDefinitive, includeTraceSuspect,
                            includeTraceCoverage, appserver_type, getLog() );
             }

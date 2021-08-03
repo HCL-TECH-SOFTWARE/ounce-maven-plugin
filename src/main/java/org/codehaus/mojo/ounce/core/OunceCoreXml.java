@@ -224,7 +224,7 @@ public class OunceCoreXml
      */
     public void scan( String theApplicationFile, String theAssessmentName, String theAssessmentOutput,
                       String theScanconfig, String theCaller, String theReportType, String theReportOutputType,
-                      String theReportOutputLocation, boolean thePublish, Map theOunceOptions, String installDir,
+                      String theReportOutputLocation, boolean includeHowToFix, boolean thePublish, Map theOunceOptions, String installDir,
                       boolean wait, boolean theIncludeTraceDefinitive, boolean theIncludeTraceSuspect,
                       boolean theIncludeTraceCoverage, String theAppserver_type, Log theLog )
         throws OunceCoreException
@@ -233,7 +233,7 @@ public class OunceCoreXml
         OunceCoreScan bean =
             new OunceCoreScan( theApplicationFile, theAssessmentName, theAssessmentOutput, theScanconfig, theAppserver_type,theCaller, theReportType,
                                theReportOutputType, theReportOutputLocation, theIncludeTraceDefinitive, theIncludeTraceSuspect,
-                               theIncludeTraceCoverage,thePublish, theOunceOptions );
+                               theIncludeTraceCoverage,thePublish, includeHowToFix, theOunceOptions );
 
         {
             XStream xs = new XStream();

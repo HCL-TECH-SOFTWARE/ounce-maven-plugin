@@ -89,7 +89,7 @@ public class OunceCoreConsole
      * @see com.ouncelabs.plugins.OunceCoreInterface#scan()
      */
     public void scan( String applicationFile, String assessmentName, String assessmentOutput, String scanconfig,String caller,
-                      String reportType, String reportOutputType, String reportOutputLocation, boolean publish,
+                      String reportType, String reportOutputType, String reportOutputLocation, boolean includeHowToFix, boolean publish,
                       Map ounceOptions, String installDir, boolean wait, boolean includeTraceDefinitive, boolean includeTraceSuspect, 
                       boolean includeTraceCoverage, String appserver_type, Log log )
         throws OunceCoreException
@@ -103,6 +103,7 @@ public class OunceCoreConsole
         log.info( "ReportType: " + reportType );
         log.info( "ReportOutputType: " + reportOutputType );
         log.info( "ReportOutputLocation: " + reportOutputLocation );
+        log.info( "Include How To Fix: " + includeHowToFix );
         log.info( "Include Definitive Trace: " + includeTraceDefinitive);
         log.info( "Include Suspected Trace: " + includeTraceSuspect);
         log.info( "Include Scan Coverage Trace: " + includeTraceSuspect);

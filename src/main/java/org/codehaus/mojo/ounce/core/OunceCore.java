@@ -101,6 +101,7 @@ public interface OunceCore
      * @param reportType generate this type of report
      * @param reportOutputType use this output type for the report
      * @param reportOutputLocation output the report to this location
+     * @param includeHowToFix Whether to include remediation details
      * @param publish automatically publish the results.
      * @param ounceOptions Extra Ounce options
      * @param installDir location of ounce client
@@ -113,7 +114,7 @@ public interface OunceCore
      * @throws OunceCoreException exception occurs during scan
      */
     void scan( String applicationFile, String assessmentName, String assessmentOutput, String scanconfig ,String caller,
-               String reportType, String reportOutputType, String reportOutputLocation, boolean publish,
+               String reportType, String reportOutputType, String reportOutputLocation, boolean includeHowToFix, boolean publish,
                Map ounceOptions, String installDir, boolean wait, boolean includeTraceDefinitive, boolean includeTraceSuspect,
                boolean includeTraceCoverage, String appserver_type, Log log )
         throws OunceCoreException;

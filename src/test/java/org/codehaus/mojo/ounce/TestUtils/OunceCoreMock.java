@@ -134,14 +134,14 @@ public class OunceCoreMock
      *      java.lang.String, java.lang.String, java.lang.String, boolean, org.apache.maven.plugin.logging.Log)
      */
     public void scan( String applicationFile, String assessmentName, String assessmentOutput, String scanconfig, String caller,
-                      String reportType, String reportOutputType, String reportOutputLocation, boolean publish,
+                      String reportType, String reportOutputType, String reportOutputLocation, boolean includeHowToFix, boolean publish,
                       Map ounceOptions, String installDir, boolean wait, boolean includeTraceDefinitive, boolean includeTraceSuspect, 
                       boolean includeTraceCoverage, String appserver_type, Log log )
         throws OunceCoreException
     {
         scan =
             new OunceCoreScan( applicationFile, assessmentName, assessmentOutput, scanconfig, caller, reportType, reportOutputType,
-                               reportOutputLocation, installDir, publish, wait, wait, wait, ounceOptions );
+                               reportOutputLocation, installDir, includeHowToFix, publish, wait, wait, wait, ounceOptions );
     }
 
     /**

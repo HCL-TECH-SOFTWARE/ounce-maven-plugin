@@ -500,8 +500,14 @@ ounce:report<br>
       Command line variable: -Dounce.includeTraceSuspect
       Example: -Dounce.includeTraceSuspect=true
       Expression: ${ounce.includeTraceSuspect}
-
-    installDir
+	
+	includeHowToFix
+	   Include How To Fix information in the report for remediation of findings. (AppScan Source version 10.0.5 and above)
+      Command line variable: -Dounce.includeHowToFix
+      Example: -Dounce.includeHowToFix=true
+      Expression: ${ounce.includeHowToFix}
+      
+	installDir
       The location of the Ounce client installation directory if the Ounce
       client is not on the path.
       Command line variable: -Dounce.installDir
@@ -653,7 +659,13 @@ ounce:scan<br>
       Command line variable: -Dounce.includeTraceSuspect
       Example: -Dounce.includeTraceSuspect=true
       Expression: ${ounce.includeTraceSuspect}
-
+      
+	 includeHowToFix
+	   Include How To Fix information in the report for remediation of findings.(AppScan Source version 10.0.5 and above)
+      Command line variable: -Dounce.includeHowToFix
+      Example: -Dounce.includeHowToFix=true
+      Expression: ${ounce.includeHowToFix}
+      
     installDir
       The location of the Ounce client installation directory if the Ounce
       client is not on the path.
