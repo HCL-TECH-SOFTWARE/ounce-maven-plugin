@@ -51,6 +51,8 @@ public class OunceCoreScan
 
     String reportOutputLocation;
     
+    boolean includeHowToFix;
+    
     boolean includeTraceDefinitive;
     
     boolean includeTraceSuspect;
@@ -63,7 +65,7 @@ public class OunceCoreScan
 
     public OunceCoreScan( String theApplicationFile, String theAssessmentName, String theAssessmentOutput,
                           String theScanconfig, String theAppserver_type,String theCaller, String theReportType, String theReportOutputType,
-                          String theReportOutputLocation, boolean theIncludeTraceDefinitive, boolean theIncludeTraceSuspect, 
+                          String theReportOutputLocation, boolean includeHowToFix, boolean theIncludeTraceDefinitive, boolean theIncludeTraceSuspect, 
                           boolean theIncludeTraceCoverage, boolean thePublish, Map theOunceOptions )
     {
         super();
@@ -75,6 +77,7 @@ public class OunceCoreScan
         this.reportType = theReportType;
         this.reportOutputLocation = theReportOutputLocation;
         this.reportOutputType = theReportOutputType;
+        this.includeHowToFix = includeHowToFix;
         this.publish = thePublish;
         this.OunceOptions = theOunceOptions;
         this.appserver_type = theAppserver_type;
@@ -156,7 +159,11 @@ public class OunceCoreScan
 	public String getAppserver_type() {
 		return appserver_type;
 	}
-
+	
+	public boolean isIncludeHowToFix() {
+		return includeHowToFix;
+	}
+	
 	public boolean isIncludeTraceDefinitive() {
 		return includeTraceDefinitive;
 	}

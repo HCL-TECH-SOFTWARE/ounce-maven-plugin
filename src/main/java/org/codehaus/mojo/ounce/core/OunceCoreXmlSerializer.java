@@ -811,7 +811,7 @@ public class OunceCoreXmlSerializer implements OunceCore
     }
 
     public void scan( String applicationFile, String assessmentName, String assessmentOutput, String scanconfig,String caller,
-                      String reportType, String reportOutputType, String reportOutputLocation, boolean publish,
+                      String reportType, String reportOutputType, String reportOutputLocation, boolean includeHowToFix, boolean publish,
                       Map ounceOptions, String installDir, boolean wait, boolean includeTraceDefinitive, 
                       boolean includeTraceSuspect, boolean includeTraceCoverage, String appserver_type,Log log )
         throws OunceCoreException
@@ -877,6 +877,10 @@ public class OunceCoreXmlSerializer implements OunceCore
                     command +=
                         " -report \"" + reportType + "\" \"" + reportOutputType + "\" " + "\"" + reportOutputLocation
                             + "\"";
+                    if(includeHowToFix)
+                    {
+                    	command += " -includeHowToFix";
+                    }
                     if(includeTraceDefinitive)
                     {
                     	command += " -includeTraceDefinitive";
@@ -905,6 +909,10 @@ public class OunceCoreXmlSerializer implements OunceCore
                         " -type \"" + reportType + "\" -output \"" + reportOutputType + "\" -file \""
                             + reportOutputLocation + "\"";
                     
+                    if(includeHowToFix)
+                    {
+                    	command += " -includeHowToFix";
+                    }
                     if(includeTraceDefinitive)
                     {
                     	command += " -includeTraceDefinitive";
