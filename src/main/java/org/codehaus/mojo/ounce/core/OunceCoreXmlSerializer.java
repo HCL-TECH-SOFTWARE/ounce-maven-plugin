@@ -1020,7 +1020,9 @@ public class OunceCoreXmlSerializer implements OunceCore
     		}
     		if(opSys.equals("Linux"))
     		{
-    			File cli = new File("/var/opt/ibm/appscansource/logs/maven_ounceauto.sh");
+    			File cli = new File("/var/opt/hcl/appscansource").exists()
+    					? new File("/var/opt/hcl/appscansource/logs/maven_ounceauto.sh")
+    					: new File("/var/opt/ibm/appscansource/logs/maven_ounceauto.sh");
     			cli.setExecutable(true);
     			FileWriter fw = new FileWriter(cli);
     			fw.append(command);

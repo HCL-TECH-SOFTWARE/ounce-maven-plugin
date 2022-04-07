@@ -184,6 +184,8 @@ ounce:project<br>
     installDir
       The location of the Ounce client installation directory. Required if
       ounceauto is not on the path.
+      NOTE: As of version 10.0.7, AppScan Source has an updated installation path.
+      AppScan Source Ounce/Maven plugin has been updated to handle both the old and new installation paths by default.
       Expression: ${ounce.installDir}
 
     javaCompilerOptions
@@ -297,7 +299,10 @@ ounce:project-only<br>
     installDir
       The location of the Ounce client installation directory. Required if
       ounceauto is not on the path.
+      NOTE: As of version 10.0.7, AppScan Source has an updated installation path.
+      AppScan Source Ounce/Maven plugin has been updated to handle both the old and new installation paths by default.
       Expression: ${ounce.installDir}
+
 
     javaCompilerOptions
       Options to pass to the javac compiler.
@@ -510,6 +515,8 @@ ounce:report<br>
 	installDir
       The location of the Ounce client installation directory if the Ounce
       client is not on the path.
+      NOTE: As of version 10.0.7, AppScan Source has an updated installation path.
+      AppScan Source Ounce/Maven plugin has been updated to handle both the old and new installation paths by default.
       Command line variable: -Dounce.installDir
       Example: Dounce.installDir='C:\Program Files (x86)\IBM\AppScanSource'
       Expression: ${ounce.installDir}
@@ -669,6 +676,8 @@ ounce:scan<br>
     installDir
       The location of the Ounce client installation directory if the Ounce
       client is not on the path.
+      NOTE: As of version 10.0.7, AppScan Source has an updated installation path.
+      AppScan Source Ounce/Maven plugin has been updated to handle both the old and new installation paths by default.
       Command line variable: -Dounce.installDir
       Example: Dounce.installDir='C:\Program Files (x86)\IBM\AppScanSource'
       Expression: ${ounce.installDir}
