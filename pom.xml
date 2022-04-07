@@ -39,6 +39,10 @@
   <description>Easily integrate security testing into your Maven builds using the ounce-maven-plugin and AppScan Source.</description>
   <url>https://help.hcltechsw.com/appscan/Source/9.0.3/topics/maven.html</url>
 
+  <properties>
+    <maven.compiler.source>1.7</maven.compiler.source>
+    <maven.compiler.target>1.7</maven.compiler.target>
+  </properties>
 
   <licenses>
   	<license>
