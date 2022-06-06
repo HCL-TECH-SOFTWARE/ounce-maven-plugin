@@ -276,14 +276,14 @@ public class ApplicationMojo
     private List<OunceProjectBean> convertToBeans(List<OunceProjectBean> theProjects)
     {
         List<OunceProjectBean> beanProjects = new ArrayList<OunceProjectBean>(theProjects.size());
-
         Iterator iter = theProjects.iterator();
         while (iter.hasNext()) {
             MavenProject prj = (MavenProject) iter.next();
 
             if (!skipPoms || !prj.getPackaging().equalsIgnoreCase("pom")) {
-				beanProjects.add( new OunceProjectBean(projectDir, name));
-            }
+            	
+           	  	 beanProjects.add(new OunceProjectBean(projectDir, prj.getArtifactId()));
+		     }
             else
                 getLog().debug( "Skipping Pom: " + prj.getArtifactId() );
         }
