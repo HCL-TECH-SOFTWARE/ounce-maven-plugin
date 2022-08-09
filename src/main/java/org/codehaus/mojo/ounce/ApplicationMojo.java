@@ -273,11 +273,13 @@ public class ApplicationMojo
          while (iter.hasNext()) {
             MavenProject prj = (MavenProject) iter.next();
             if (!skipPoms || !prj.getPackaging().equalsIgnoreCase("pom")) {
+            	//To check if project directory param is passed. if project directory is not passed 
+               // if param is paased then file project directory path will be added in PAF else default path 
             	if(getProjectRoot().equalsIgnoreCase(projectDir)) {    
             		beanProjects.add(new OunceProjectBean(prj.getBasedir().getPath(), prj.getArtifactId()));
                 }else {
             		beanProjects.add(new OunceProjectBean(projectDir, prj.getArtifactId()));
-             }	
+               }	
 		     }
             else
                 getLog().debug( "Skipping Pom: " + prj.getArtifactId() );
