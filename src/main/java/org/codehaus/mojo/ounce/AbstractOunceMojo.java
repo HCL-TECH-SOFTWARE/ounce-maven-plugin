@@ -58,6 +58,15 @@ public abstract class AbstractOunceMojo
 	@Parameter (property="project", readonly=true)
     protected MavenProject project;
 
+	/**
+     * Specifies the directory where to create the ppf file
+     * 
+     * 
+     */
+    @Parameter (property="ounce.projectDir", defaultValue="${basedir}")
+    protected String projectDir;
+    
+	
     /**
      * The Maven Session Object
      * 
