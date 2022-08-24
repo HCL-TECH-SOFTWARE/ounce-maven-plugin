@@ -194,13 +194,6 @@ public class ProjectOnlyMojo extends AbstractOunceMojo
     @Parameter (property="ounce.precompileScan", defaultValue="false")
     private boolean precompileScan;
     
-    /**
-     * Specifies the directory where to create the ppf file
-     * 
-     * 
-     */
-    @Parameter (property="ounce.projectDir", defaultValue="${basedir}")
-    private String projectDir;
     
     /**
      * Specifies the directory where to create the paf file
@@ -266,7 +259,7 @@ public class ProjectOnlyMojo extends AbstractOunceMojo
         if (includeTestSources)
             sourceRoots.addAll(project.getTestCompileSourceRoots());
         
-        return Utils.convertToRelativePaths(sourceRoots, projectDir);
+         return Utils.convertToRelativePaths(sourceRoots, projectDir);
     }
     
     protected Map<String, String> getOptions() {

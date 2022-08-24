@@ -127,13 +127,6 @@ public class ApplicationMojo
 	@Parameter
     protected List externalApplications;
     
-    /**
-     * Specifies the directory where to create the ppf file
-     * 
-     * 
-     */
-	@Parameter (property="ounce.projectDir", defaultValue="${basedir}")
-    private String projectDir;
     
     /**
      * Specifies the directory where to create the paf file
@@ -275,15 +268,19 @@ public class ApplicationMojo
      */
     private List<OunceProjectBean> convertToBeans(List<OunceProjectBean> theProjects)
     {
-        List<OunceProjectBean> beanProjects = new ArrayList<OunceProjectBean>(theProjects.size());
-
+    	List<OunceProjectBean> beanProjects = new ArrayList<OunceProjectBean>(theProjects.size());
         Iterator iter = theProjects.iterator();
-        while (iter.hasNext()) {
+         while (iter.hasNext()) {
             MavenProject prj = (MavenProject) iter.next();
-
             if (!skipPoms || !prj.getPackaging().equalsIgnoreCase("pom")) {
-				beanProjects.add( new OunceProjectBean(projectDir, name));
-            }
+            	//To check if project directory param is passed. if project directory is not passed 
+               // if param is paased then file project directory path will be added in PAF else default path 
+            	if(getProjectRoot().equalsIgnoreCase(projectDir)) {    
+            		beanProjects.add(new OunceProjectBean(prj.getBasedir().getPath(), prj.getArtifactId()));
+                }else {
+            		beanProjects.add(new OunceProjectBean(projectDir, prj.getArtifactId()));
+               }	
+		     }
             else
                 getLog().debug( "Skipping Pom: " + prj.getArtifactId() );
         }
