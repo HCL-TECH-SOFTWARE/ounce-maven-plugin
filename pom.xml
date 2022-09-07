@@ -32,7 +32,7 @@
   
   <groupId>org.codehaus.mojo</groupId>
   <artifactId>ounce-maven-plugin</artifactId>
-  <version>1.6.3</version>
+  <version>1.6.4-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
   <name>Ounce Maven Plugin</name>
@@ -65,7 +65,7 @@
     <connection>scm:git:ssh://github.com/hclproducts/ounce-maven-plugin.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/hclproducts/ounce-maven-plugin.git</developerConnection>
     <url>https://github.com/hclproducts/ounce-maven-plugin</url>
-    <tag>ounce-maven-plugin-1.6.3</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <build>
