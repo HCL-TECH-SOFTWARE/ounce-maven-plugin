@@ -369,7 +369,7 @@ public class ProjectOnlyMojo extends AbstractOunceMojo
      * 
      * @return The path to the generated webapp directory or the empty string if this project is not a war project.
      */
-	protected String getWebRoot() {
+    protected String getWebRoot() {
         if (!project.getPackaging().equalsIgnoreCase("war"))
             return "";
 
@@ -382,7 +382,7 @@ public class ProjectOnlyMojo extends AbstractOunceMojo
         }
 
         return Utils.makeRelative(webappDirectory, projectDir);
-	}
+    }
 	
 	private void configureVariables() throws OunceCoreException, ComponentLookupException {
         if ( pathVariableMap == null )
