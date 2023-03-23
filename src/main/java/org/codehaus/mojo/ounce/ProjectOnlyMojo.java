@@ -45,6 +45,7 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.codehaus.mojo.ounce.core.OunceCoreException;
 import org.codehaus.mojo.ounce.utils.Utils;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
+import org.codehaus.plexus.util.xml.Xpp3Dom;
 
 /**
  * This mojo generates an Ounce project file. It does not fork the build like the "project" mojo and is instead intended
@@ -368,12 +369,20 @@ public class ProjectOnlyMojo extends AbstractOunceMojo
      * 
      * @return The path to the generated webapp directory or the empty string if this project is not a war project.
      */
-    protected String getWebRoot() {
-    	if(!project.getPackaging().equalsIgnoreCase("war"))
-    		return "";
-    	
-    	return Utils.makeRelative(webappDirectory, projectDir);
-    }
+	protected String getWebRoot() {
+        if (!project.getPackaging().equalsIgnoreCase("war"))
+            return "";
+
+        // if maven-war-plugin and its warName property exists then update name of war file in webappDirectory by value given in warName property.  
+        Xpp3Dom warConfigDom = (Xpp3Dom) project.getPlugin("org.apache.maven.plugins:maven-war-plugin").getConfiguration();
+        if (warConfigDom != null) {
+            Xpp3Dom varNameDom = warConfigDom.getChild("warName");
+            if (varNameDom != null)
+                webappDirectory = project.getBuild().getDirectory().concat(File.separator).concat(varNameDom.getValue()).concat(".war");
+        }
+
+        return Utils.makeRelative(webappDirectory, projectDir);
+	}
 	
 	private void configureVariables() throws OunceCoreException, ComponentLookupException {
         if ( pathVariableMap == null )
