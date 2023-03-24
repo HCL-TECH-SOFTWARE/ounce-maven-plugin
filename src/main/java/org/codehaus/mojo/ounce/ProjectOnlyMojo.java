@@ -375,7 +375,7 @@ public class ProjectOnlyMojo extends AbstractOunceMojo
         // if maven-war-plugin and its warName property exists then update name of war file by the value given in warName property.  
         String warNameFromPlugin = Utils.getValueOfProperty(project, "org.apache.maven.plugins", "maven-war-plugin", "warName");
         if(warNameFromPlugin !=null)
-        	webappDirectory = project.getBuild().getDirectory().concat(File.separator).concat(warNameFromPlugin).concat(".war");
+            webappDirectory = project.getBuild().getDirectory().concat(File.separator).concat(warNameFromPlugin).concat(".war");
 
         return Utils.makeRelative(webappDirectory, projectDir);
     }
