@@ -45,7 +45,6 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.codehaus.mojo.ounce.core.OunceCoreException;
 import org.codehaus.mojo.ounce.utils.Utils;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
-import org.codehaus.plexus.util.xml.Xpp3Dom;
 
 /**
  * This mojo generates an Ounce project file. It does not fork the build like the "project" mojo and is instead intended
