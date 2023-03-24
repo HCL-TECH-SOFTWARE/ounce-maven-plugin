@@ -367,19 +367,16 @@ public class ProjectOnlyMojo extends AbstractOunceMojo
     /**
      * Gets the path to the generated webapp directory for war projects.
      * 
-     * @return The path to the generated webapp directory or the empty string if this project is not a war project.
+     * @return The relative path to the generated war file or the empty string if this project is not a war project.
      */
     protected String getWebRoot() {
         if (!project.getPackaging().equalsIgnoreCase("war"))
             return "";
 
-        // if maven-war-plugin and its warName property exists then update name of war file in webappDirectory by value given in warName property.  
-        Xpp3Dom warConfigDom = (Xpp3Dom) project.getPlugin("org.apache.maven.plugins:maven-war-plugin").getConfiguration();
-        if (warConfigDom != null) {
-            Xpp3Dom varNameDom = warConfigDom.getChild("warName");
-            if (varNameDom != null)
-                webappDirectory = project.getBuild().getDirectory().concat(File.separator).concat(varNameDom.getValue()).concat(".war");
-        }
+        // if maven-war-plugin and its warName property exists then update name of war file by the value given in warName property.  
+        String warName = Utils.getValueOfProperty(project, "org.apache.maven.plugins", "maven-war-plugin", "warName");
+        if(warName !=null)
+        	webappDirectory = project.getBuild().getDirectory().concat(File.separator).concat(warName).concat(".war");
 
         return Utils.makeRelative(webappDirectory, projectDir);
     }
