@@ -366,13 +366,18 @@ public class ProjectOnlyMojo extends AbstractOunceMojo
     /**
      * Gets the path to the generated webapp directory for war projects.
      * 
-     * @return The path to the generated webapp directory or the empty string if this project is not a war project.
+     * @return The relative path to the generated war file or the empty string if this project is not a war project.
      */
     protected String getWebRoot() {
-    	if(!project.getPackaging().equalsIgnoreCase("war"))
-    		return "";
-    	
-    	return Utils.makeRelative(webappDirectory, projectDir);
+        if (!project.getPackaging().equalsIgnoreCase("war"))
+            return "";
+
+        // if maven-war-plugin and its warName property exists then update name of war file by the value given in warName property.  
+        String warNameFromPlugin = Utils.getValueOfProperty(project, "org.apache.maven.plugins", "maven-war-plugin", "warName");
+        if(warNameFromPlugin !=null)
+            webappDirectory = project.getBuild().getDirectory().concat(File.separator).concat(warNameFromPlugin).concat(".war");
+
+        return Utils.makeRelative(webappDirectory, projectDir);
     }
 	
 	private void configureVariables() throws OunceCoreException, ComponentLookupException {

@@ -38,7 +38,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.StringUtils;
+import org.codehaus.plexus.util.xml.Xpp3Dom;
 
 public class Utils
 {
@@ -213,5 +215,23 @@ public class Utils
 			}
 		}
 		return ret;
+	}
+	/**
+	 * Get value of a plugin's property
+	 * @param project maven project
+	 * @param groupId groupId of the plugin
+	 * @param artifactId artifactId of the plugin
+	 * @param property name of the property
+	 * @return value of the property
+	 */
+	public static String getValueOfProperty(MavenProject project, String groupId, String artifactId, String property) {
+		String propVal = null;
+		Xpp3Dom configDom = (Xpp3Dom) project.getPlugin(groupId + ":" + artifactId).getConfiguration();
+		if (configDom != null) {
+			Xpp3Dom propDom = configDom.getChild(property);
+			if (propDom != null)
+				propVal = propDom.getValue();
+		}
+		return propVal;
 	}
 }
