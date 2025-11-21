@@ -1,5 +1,7 @@
 /*
  * Copyright (c) 2007, Ounce Labs, Inc.
+ * (c) Copyright IBM Corporation 2016.
+ * (c) Copyright HCL Technologies Ltd. 2019. 
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -270,6 +272,11 @@ public class ScanMojo
         {
             throw new MojoExecutionException( "\'applicationFile\' must be defined." );
         }
+        
+        //If '-Dounce.appDir' is not specified as part of the command, then the 'applicationFile' is 
+        //constructed with the string '${ounce.appDir}' instead of constructing with its value.
+        //So, the below line replaces such instance with a '.' meaning the current working directory.
+       	applicationFile = applicationFile.replace("${ounce.appDir}", ".");
 
         // check my cache to see if this particular set of params has already been scanned.
         if ( shouldExecute() )
