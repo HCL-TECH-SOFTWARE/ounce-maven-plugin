@@ -196,11 +196,11 @@ ounce:project<br>
       JDK configuration known to Ounce Core.
       Expression: ${ounce.jdkName}
 
-    jspCompilerName (Default: Tomcat 8)
+    jspCompilerName (Default: Tomcat 9)
       JSP compiler type name / application server.
       Expression: ${ounce.jspCompilerName}
 
-    jspCompilerType (Default: 13)
+    jspCompilerType (Default: 15)
       JSP compiler type name / application server.
       Expression: ${ounce.jspCompilerType}
 
@@ -312,11 +312,11 @@ ounce:project-only<br>
       JDK configuration known to Ounce Core.
       Expression: ${ounce.jdkName}
 
-    jspCompilerName (Default: Tomcat 8)
+    jspCompilerName (Default: Tomcat 9)
       JSP compiler type name / application server.
       Expression: ${ounce.jspCompilerName}
 
-    jspCompilerType (Default: 13)
+    jspCompilerType (Default: 15)
       JSP compiler type name / application server.
       Expression: ${ounce.jspCompilerType}
 
@@ -436,9 +436,8 @@ ounce:report<br>
       If the application that you are opening includes JavaServer Pages (for
       example, a WAR or EAR file), use this setting to specify the application
       server to use for JSP compilation. Specify one of these, in double
-      quotation marks: Tomcat 5, Tomcat 6, Tomcat 7, Tomcat 8, WebSphere 6.1,
-      WebSphere 7.0, WebSphere 8.0, WebSphere 8.5, WebLogic 8, WebLogic 9,
-      WebLogic 11g or WebLogic 12c Command line variable: -Dounce.appserver_type
+      quotation marks: Tomcat 9, WebSphere 7.0, WebSphere 8.0, WebSphere 8.5, WebSphere 9.0,
+      WebLogic 11g, WebLogic 12c Command line variable: -Dounce.appserver_type
       Example: -Dounce.appserver_type='WebSphere 8.5'
       Expression: ${ounce.appserver_type}
 
@@ -603,9 +602,8 @@ ounce:scan<br>
       If the application that you are opening includes JavaServer Pages (for
       example, a WAR or EAR file), use this setting to specify the application
       server to use for JSP compilation. Specify one of these, in double
-      quotation marks: Tomcat 5, Tomcat 6, Tomcat 7, Tomcat 8, WebSphere 6.1,
-      WebSphere 7.0, WebSphere 8.0, WebSphere 8.5, WebLogic 8, WebLogic 9,
-      WebLogic 11g or WebLogic 12c Command line variable: -Dounce.appserver_type
+      quotation marks: Tomcat 9, WebSphere 7.0, WebSphere 8.0, WebSphere 8.5, WebSphere 9.0,
+      WebLogic 11g, WebLogic 12c Command line variable: -Dounce.appserver_type
       Example: -Dounce.appserver_type='WebSphere 8.5'
       Expression: ${ounce.appserver_type}
 

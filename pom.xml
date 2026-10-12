@@ -32,7 +32,7 @@
   
   <groupId>org.codehaus.mojo</groupId>
   <artifactId>ounce-maven-plugin</artifactId>
-  <version>1.6.4-SNAPSHOT</version>
+  <version>1.6.3</version>
   <packaging>maven-plugin</packaging>
 
   <name>Ounce Maven Plugin</name>
@@ -40,8 +40,8 @@
   <url>https://help.hcltechsw.com/appscan/Source/9.0.3/topics/maven.html</url>
 
   <properties>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
   </properties>
 
   <licenses>
@@ -99,7 +99,15 @@
       <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-plugin-plugin</artifactId>
-          <version>3.4</version>
+          <version>3.11.0</version>
+          <executions>
+            <execution>
+              <id>generate-helpmojo</id>
+              <goals>
+                <goal>helpmojo</goal>
+              </goals>
+            </execution>
+          </executions>
       </plugin>
     </plugins>
   </build>

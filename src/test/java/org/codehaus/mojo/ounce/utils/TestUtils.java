@@ -65,7 +65,7 @@ public class TestUtils
 
         String result = Utils.getDynamicToString( a );
         String expectedResult =
-            "org.codehaus.mojo.ounce.utils.TestUtils$TestObj:  a= foo  b= 1  c= 2.2  this$0= testDynamicToString(org.codehaus.mojo.ounce.utils.TestUtils) ";
+            "org.codehaus.mojo.ounce.utils.TestUtils$TestObj:  a= foo  b= 1  c= 2.2 ";
         assertEquals( expectedResult, result );
     }
 
