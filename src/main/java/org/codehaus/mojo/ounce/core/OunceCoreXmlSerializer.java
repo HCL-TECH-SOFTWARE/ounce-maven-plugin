@@ -231,6 +231,10 @@ public class OunceCoreXmlSerializer implements OunceCore
                                boolean analyzeStrutsFramework, boolean importStrutsValidation, String projectDir, Log log )
         throws OunceCoreException
     {
+        String[] resolvedJspCompiler = Utils.resolveJspCompilerNameAndType( jspCompilerInfoName, jspCompilerType, log );
+        jspCompilerInfoName = resolvedJspCompiler[0];
+        jspCompilerType = resolvedJspCompiler[1];
+
         // place all of the Project attributes into a property bundle
         Properties projectAttrs = new Properties();
 
@@ -347,6 +351,12 @@ public class OunceCoreXmlSerializer implements OunceCore
                 xmlDoc = new DocumentImpl();
                 root = xmlDoc.createElement( "Project" );
                 xmlDoc.appendChild( root );
+                // Apply the default compiler pair ONLY when creating a brand-new .ppf file AND
+                if ( StringUtils.isEmpty( jspCompilerInfoName ) && StringUtils.isEmpty( jspCompilerType ) )
+                {
+                    projectAttrs.setProperty( "jsp_compiler_info_name", "Tomcat 9" );
+                    projectAttrs.setProperty( "jsp_compiler_type", "15" );
+                }
             }
 
             // enumerate over the Project attributes and set them as attributes on the Project node

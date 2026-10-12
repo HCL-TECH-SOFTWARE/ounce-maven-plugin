@@ -92,7 +92,7 @@ public class ProjectOnlyMojo extends AbstractOunceMojo
      * 
      * 
      */
-    @Parameter (property="ounce.jspCompilerName", defaultValue="Tomcat 8")
+    @Parameter (property="ounce.jspCompilerName")
     private String jspCompilerName;
 
     /**
@@ -100,7 +100,7 @@ public class ProjectOnlyMojo extends AbstractOunceMojo
      * 
      * 
      */
-    @Parameter (property="ounce.jspCompilerType", defaultValue="13")
+    @Parameter (property="ounce.jspCompilerType")
     private String jspCompilerType;
 
     /**
